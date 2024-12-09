@@ -1,68 +1,51 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@media (min-width: 480px) {
+  .responsive-xs {
+    background-color: D#ff49db; /* Pink background for extra small screens */
+    padding: 1rem; /* Padding for extra small screens */
+    font-size: 0.875rem; /* Font size for extra small screens */
   }
-  a:hover {
-    color: #747bff;
+}
+
+@media (min-width: 640px) {
+  .responsive-sm {
+    background-color: #1fb6ff; /* Blue background for small screens */
+    padding: 1.5rem; /* Padding for small screens */
+    font-size: 1rem; /* Font size for small screens */
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@media (min-width: 768px) {
+  .responsive-md {
+    background-color: #13ce66; /* Green background for medium screens */
+    padding: 2rem; /* Padding for medium screens */
+    font-size: 1.125rem; /* Font size for medium screens */
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-lg {
+    background-color: #ff7849; /* Orange background for large screens */
+    padding: 2.5rem; /* Padding for large screens */
+    font-size: 1.25rem; /* Font size for large screens */
+  }
+}
+
+@media (min-width: 1280px) {
+  .responsive-xl {
+    background-color: #7e5bef; /* Purple background for extra large screens */
+    padding: 3rem; /* Padding for extra large screens */
+    font-size: 1.5rem; /* Font size for extra large screens */
+  }
+}
+
+@media (min-width: 1536px) {
+  .responsive-2xl {
+    background-color: #ffc82c; /* Yellow background for 2x extra large screens */
+    padding: 3.5rem; /* Padding for 2x extra large screens */
+    font-size: 1.75rem; /* Font size for 2x extra large screens */
   }
 }

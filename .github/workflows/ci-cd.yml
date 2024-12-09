@@ -30,15 +30,20 @@ jobs:
           cd ${{ matrix.directory }}
           npm install
 
+      - name: Add structuredClone polyfill
+        run: |
+          echo "if (typeof global.structuredClone === 'undefined') { global.structuredClone = (obj) => JSON.parse(JSON.stringify(obj)); }" > polyfill.js
+          echo "require('./polyfill');" >> node_modules/vite/dist/node/chunks/dep-yUJfKD1i.js
+
       - name: Run build
         run: |
           cd ${{ matrix.directory }}
           npm run build
 
-    #   - name: Run tests
-    #     run: |
-    #       cd ${{ matrix.directory }}
-    #       npm test
+      - name: Run tests
+        run: |
+          cd ${{ matrix.directory }}
+          npm test
 
   deploy:
     runs-on: ubuntu-latest

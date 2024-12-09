@@ -18,6 +18,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "backend": "file:",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",

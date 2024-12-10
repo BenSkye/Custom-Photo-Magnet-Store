@@ -16,6 +16,7 @@ module.exports = {
       black: '#000000',
       information: '#f8f9fa',
       zalo: '#00beff',
+      red: '#ff0000',
     },
     extend: {
       colors: {

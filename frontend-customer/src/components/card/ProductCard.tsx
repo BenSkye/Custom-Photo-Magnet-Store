@@ -1,5 +1,12 @@
 import { ProductCardProps } from '../../types/productCardProps';
+import { Card } from 'antd';
 import { Button } from '../button/Button';
+import {
+    DollarOutlined,
+    InfoCircleOutlined,
+    ShoppingCartOutlined
+} from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 export const ProductCard: React.FC<ProductCardProps> = ({
     image,
@@ -7,45 +14,48 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     description,
     price,
     priceUnit,
-    onViewMore,
-    onOrder
 }) => {
     return (
-        <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-[680px] flex flex-col justify-between">
+        <Card className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-[680px] flex flex-col justify-between ">
             <div>
                 <img
                     src={image}
                     alt={title}
                     className="rounded-lg w-full h-[180px] object-cover mb-3"
                 />
-                <h3 className="text-lg font-semibold mb-2">{title}</h3>
+                <h3 className="text-xl font-semibold mb-2">{title}</h3>
                 <p className="text-sm text-gray-600 mb-3 line-clamp-3">
                     {description}
                 </p>
             </div>
             <div>
-                <div className="mb-4">
+                <div className="mb-4 flex items-center">
+                    <DollarOutlined className="text-red-500 mr-2 text-xl" />
                     <span className="text-sm text-gray-600">Giá: </span>
-                    <span className="text-lg font-bold text-red-500">{price}</span>
+                    <span className="text-2xl font-bold text-red ml-1">{price}</span>
                     <span className="text-sm text-gray-600">/{priceUnit}</span>
                 </div>
-                <div className="flex flex-row  gap-2">
-                    <Button
-                        variant='secondary'
-                        onClick={onViewMore}
-                        className="w-full text-sm py-1.5 px-4"
-                    >
-                        XEM THÊM THÔNG TIN
-                    </Button>
-                    <Button
-                        variant='primary'
-                        onClick={onOrder}
-                        className="w-full text-sm py-1.5 px-4"
-                    >
-                        ĐẶT NGAY
-                    </Button>
+                <div className="flex lg:flex-row gap-2 flex-col">
+                    <Link to="/information">
+                        <Button
+                            variant='secondary'
+                            className="w-full text-[13px] sm:text-sm py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-2 min-h-[40px]"
+                        >
+                            <InfoCircleOutlined className="text-lg" />
+                            <span className="whitespace-nowrap">XEM THÊM THÔNG TIN</span>
+                        </Button>
+                    </Link>
+                    <Link to="/order">
+                        <Button
+                            variant='primary'
+                            className="w-full text-[13px] sm:text-sm py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-2 min-h-[40px]"
+                        >
+                            <ShoppingCartOutlined className="text-lg" />
+                            <span className="whitespace-nowrap">ĐẶT NGAY</span>
+                        </Button>
+                    </Link>
                 </div>
             </div>
-        </div>
+        </Card>
     );
 };

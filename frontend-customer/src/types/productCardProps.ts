@@ -4,6 +4,4 @@ export interface ProductCardProps {
     description: string;
     price: string;
     priceUnit: string;
-    onViewMore?: () => void;
-    onOrder?: () => void;
 }

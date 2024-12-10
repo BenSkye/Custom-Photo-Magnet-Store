@@ -2,59 +2,51 @@ import { ProductCard } from '../components/card/ProductCard';
 import { ReviewSection } from '../components/sections/home/ReviewSection';
 import { HeroSection } from '../components/sections/home/HeroSection';
 import GallerySection from '../components/sections/home/GallerySection';
+import { AnonymousReviewSection } from '../components/sections/home/AnonymousReviewSection';
+import { Divider } from 'antd';
+import { AnimateWrapper } from '../utils/animate/AnimateWrapper';
+import { products } from '../services/productServices';
 
 export default function Home() {
-
-    const products = [
-        {
-            image: '/combo.jpg',
-            title: 'Combo 6 ảnh',
-            description: 'Đặt in ảnh nam châm theo combo để được ưu đãi với giá tốt nhất. Nguyên 1 bộ 6 ảnh chỉ có giá 120k thôi...',
-            price: '120k',
-            priceUnit: 'bộ',
-            onViewMore: () => {
-                // Xử lý khi click xem thêm
-            },
-            onOrder: () => {
-                // Xử lý khi click đặt ngay
-            }
-        },
-        {
-            image: '/anhle.jpg',
-            title: 'In ảnh nam châm lẻ',
-            description: 'Nếu bạn chỉ muốn in 1 vài hình nhỏ để làm kỉ niệm, tụi mình sẵn sàng đáp ứng. Có mạnh đơn giá lẻnh, tụi mình sẵn lòng in với số lượng chỉ 1 cái...',
-            price: '25k',
-            priceUnit: 'cái',
-            onViewMore: () => {
-                // Xử lý khi click xem thêm
-            },
-            onOrder: () => {
-                // Xử lý khi click đặt ngay
-            }
-        }
-    ];
 
     return (
         <div className="container mx-auto px-4 py-8">
             {/* Hero Section */}
-            <HeroSection />
+            <AnimateWrapper variant="slideRight" delay={0.2}>
+                <HeroSection />
+            </AnimateWrapper>
+
+            <Divider>SẢN PHẨM</Divider>
+
             {/* Products Section */}
-            <div className="container mx-auto px-4">
-                <div className="max-w-4xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
-                        {products.map((product, index) => (
-                            <ProductCard
-                                key={index}
-                                {...product}
-                            />
-                        ))}
+            <AnimateWrapper variant="slideLeft" delay={0.2}>
+                <div className="container mx-auto px-4">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
+                            {products.map((product, index) => (
+                                <ProductCard
+                                    key={index}
+                                    {...product}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </AnimateWrapper>
+
             {/* Gallery Section */}
-            <GallerySection />
+            <AnimateWrapper variant="slideRight" delay={0.2}>
+                <GallerySection />
+            </AnimateWrapper>
+
             {/* Reviews Section */}
-            <ReviewSection />
+            <AnimateWrapper variant="slideLeft" delay={0.2}>
+                <ReviewSection />
+            </AnimateWrapper>
+            {/* Anonymous Reviews Section */}
+            <AnimateWrapper variant="slideRight" delay={0.2}>
+                <AnonymousReviewSection />
+            </AnimateWrapper>
         </div>
     );
 }

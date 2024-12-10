@@ -12,12 +12,17 @@ module.exports = {
       'gray-dark': '#273444',
       gray: '#8492a6',
       'gray-light': '#d3dce6',
-    },
-    fontFamily: {
-      sans: ['Graphik', 'sans-serif'],
-      serif: ['Merriweather', 'serif'],
+      white: '#ffffff',
+      black: '#000000',
+      information: '#f8f9fa',
+      zalo: '#00beff',
     },
     extend: {
+      colors: {
+        footer: {
+          bg: '#2D3339', // Màu nền footer
+        },
+      },
       spacing: {
         '8xl': '96rem',
         '9xl': '128rem',
@@ -26,14 +31,10 @@ module.exports = {
         '4xl': '2rem',
       },
     },
-    screens: {
-      xs: '480px',
-      sm: '640px',
-      md: '768px',
-      lg: '1024px',
-      xl: '1280px',
-      '2xl': '1536px',
-    },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/aspect-ratio'),
+  ],
 };

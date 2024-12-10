@@ -1,6 +1,5 @@
-import { RouteObject } from 'react-router-dom';
 
-export interface AppRoute extends RouteObject {
+export interface AppRoute {
   key: string;
   label: string;
   icon?: React.ReactNode;

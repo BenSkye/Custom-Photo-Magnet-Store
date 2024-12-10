@@ -1,4 +1,6 @@
 import { Button } from '../../button/Button';
+import { ShoppingCartOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 export const HeroSection = () => {
     return (
@@ -15,13 +17,15 @@ export const HeroSection = () => {
                     chiếc ảnh nam châm đầy màu sắc.
                 </p>
                 <div className="flex gap-4 justify-center lg:justify-start">
-                    <Button variant="primary"
-                        bgColor="bg-purple-500/75">
-                        ĐẶT NGAY
-                    </Button>
+                    <Link to="/order">
+                        <Button variant="primary"
+                            bgColor="bg-purple-500/75">
+                            <ShoppingCartOutlined className="text-lg" />
+                            ĐẶT NGAY
+                        </Button>
+                    </Link>
                     <Button
-                        variant="custom"
-                        bgColor="bg-[#0068FF]"
+                        variant="secondary"
                         icon={<img src='/icons8-zalo-32.png' className="w-6 h-6" />}  // Thêm icon Zalo
                     >
                         NHẮN ZALO
@@ -32,12 +36,12 @@ export const HeroSection = () => {
             {/* Images */}
             <div className="lg:w-1/2 grid grid-cols-2 gap-4">
                 <img
-                    src="/anhle.jpg"
+                    src="/heroImg.jpg"
                     alt="Tường ảnh nam châm"
                     className="rounded-lg w-full"
                 />
                 <img
-                    src="/combo.jpg"  // Hình ảnh cầm nam châm
+                    src="/heroImg.jpg"
                     alt="Ảnh nam châm cầm tay"
                     className="rounded-lg w-full"
                 />

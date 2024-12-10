@@ -12,15 +12,15 @@ const Footer: React.FC = () => {
                         <h2 className="text-white text-2xl font-medium mb-1">
                             Ảnh Nam Châm
                         </h2>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-gray-400">
                             Lưu giữ khoảnh khắc trên những bức hình
                         </p>
                     </div>
 
                     {/* Social Media Section */}
-                    <div className="text-center md:text-right">
+                    <div className="text-center md:text-right flex flex-col items-center">
                         <h3 className="text-gray-400 text-sm font-medium mb-3">
-                            SOCIAL
+                            SOCIAL MEDIA
                         </h3>
                         <div className="flex items-center space-x-8">
                             <a

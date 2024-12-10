@@ -3,6 +3,7 @@ import Home from '../pages/Home';
 import Products from '../pages/Products';
 import Reviews from '../pages/Reviews';
 import Contact from '../pages/Contact';
+import Order from '../pages/Order';
 
 export const routes: AppRoute[] = [
   {
@@ -28,5 +29,11 @@ export const routes: AppRoute[] = [
     key: 'contact',
     label: 'Liên hệ',
     element: <Contact />,
+  },
+  {
+    path: '/order',
+    key: 'order',
+    label: 'Đặt hàng',
+    element: <Order />,
   },
 ];

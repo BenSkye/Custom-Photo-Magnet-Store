@@ -5,7 +5,7 @@ interface CompletionStepProps {
     orderInfo: any;
 }
 
-export const CompletionStep: React.FC<CompletionStepProps> = ({ onPrev, orderInfo }) => {
+export const CompletionStep: React.FC<CompletionStepProps> = ({ onPrev }) => {
     return (
         <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl font-bold text-green-600 mb-4">Đặt hàng thành công!</h2>

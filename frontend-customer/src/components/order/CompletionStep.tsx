@@ -1,16 +1,179 @@
-import { Button } from 'antd';
+import { useState } from 'react';
+import { Button, message } from 'antd';
+import { OrderInfo } from '../../types/orderInfor';
+import { formatPrice } from '../../utils/format/formatPrice';
+import { ConfirmOrderModal } from '../modal/ConfirmOrderModal';
+import { FIREBASE_STORAGE_PATH } from '../../utils/constants';
+import { uploadImages } from '../../services/uploadService';
+import { IndexedDBService } from '../../services/indexedDBService';
 
+const indexedDBService = new IndexedDBService();
 interface CompletionStepProps {
+    orderInfo?: OrderInfo;
+    totalImages: number;
+    totalPrice: number;
     onPrev: () => void;
-    orderInfo: any;
+    onConfirm: () => void;
+}
+interface SavedFile {
+    file: File;
+    name: string;
+    quantity: number;
 }
 
-export const CompletionStep: React.FC<CompletionStepProps> = ({ onPrev }) => {
+export const CompletionStep: React.FC<CompletionStepProps> = ({
+    orderInfo,
+    totalImages,
+    totalPrice,
+    onPrev,
+    onConfirm,
+}) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+
+    const handleConfirmClick = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleModalConfirm = async () => {
+        setIsUploading(true);
+        try {
+            // Hiển thị loading message
+            const loadingMessage = message.loading('Đang xử lý đơn hàng...', 0);
+
+            // Lấy files từ IndexedDB
+            const savedFiles = await indexedDBService.getFromIndexedDB() as SavedFile[];
+
+            // Upload từng file lên Firebase
+            const uploadPromises = savedFiles.map(async (savedFile: SavedFile) => {
+                const result = await uploadImages(savedFile.file, `${FIREBASE_STORAGE_PATH.ORDERS_IMG}/${Date.now()}-${savedFile.name}`);
+                return {
+                    url: result,
+                    quantity: savedFile.quantity || 1,
+                    name: savedFile.name
+                };
+            });
+
+            const uploadedResults = await Promise.all(uploadPromises);
+
+            // Tạo đơn hàng với URLs của ảnh đã upload
+            const orderData = {
+                ...orderInfo,
+                images: uploadedResults,
+                totalImages,
+                totalPrice: totalPrice + 25000,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+
+            // Lưu đơn hàng vào database
+            // await createOrder(orderData);
+            console.log('Order Data:', orderData);
+
+            // Xóa files đã upload khỏi IndexedDB
+            await indexedDBService.clearIndexedDB();
+
+            // Đóng loading message
+            loadingMessage();
+
+            // Hiển thị thông báo thành công
+            message.success('Đặt hàng thành công!');
+
+            // Đóng modal và chuyển đến bước tiếp theo
+            setIsModalOpen(false);
+            onConfirm();
+        } catch (error) {
+            console.error('Error processing order:', error);
+            message.error('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+    const handleModalCancel = () => {
+        setIsModalOpen(false);
+    };
+
     return (
-        <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl font-bold text-green-600 mb-4">Đặt hàng thành công!</h2>
-            <p className="mb-4">Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ liên hệ với bạn sớm nhất.</p>
-            <Button size="large" onClick={onPrev}>Quay lại trang chủ</Button>
+        <div className="max-w-2xl mx-auto px-4 sm:px-0">
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-bold text-center mb-4 sm:mb-6">HOÀN TẤT ĐỂ ĐẶT HÀNG</h2>
+
+                {/* Thông tin khách hàng */}
+                <div className="space-y-3 mb-4 sm:mb-6">
+                    <div className="flex flex-col sm:flex-row">
+                        <span className="text-gray-600 sm:w-40 mb-1 sm:mb-0">Họ tên: </span>
+                        <span className="font-medium break-words max-w-[calc(100%-10rem)] overflow-hidden">{orderInfo?.fullName}</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row">
+                        <span className="text-gray-600 sm:w-40 mb-1 sm:mb-0">Số điện thoại:</span>
+                        <span className="font-medium break-words max-w-[calc(100%-10rem)] overflow-hidden">{orderInfo?.phone}</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row">
+                        <span className="text-gray-600 sm:w-40 mb-1 sm:mb-0">Địa chỉ nhận hàng:</span>
+                        <span className="font-medium break-words max-w-[calc(100%-10rem)] overflow-hidden">{orderInfo?.address}</span>
+                    </div>
+                    {orderInfo?.note && (
+                        <div className="flex flex-col sm:flex-row">
+                            <span className="text-gray-600 sm:w-40 mb-1 sm:mb-0">Ghi chú:</span>
+                            <span className="font-medium break-words max-w-[calc(100%-10rem)] overflow-hidden">
+                                {orderInfo.note}
+                            </span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Thông tin đơn hàng */}
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg space-y-3 mb-4 sm:mb-6">
+                    <div className="flex justify-between">
+                        <span className="text-gray-600">Số lượng ảnh:</span>
+                        <span className="font-medium">x{totalImages}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-gray-600">Tiền ảnh:</span>
+                        <span className="font-medium">{formatPrice(totalPrice || 0)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-gray-600">Phí ship:</span>
+                        <span className="font-medium">25.000₫</span>
+                    </div>
+                    <div className="border-t pt-2 flex justify-between">
+                        <span className="font-bold">Tổng tiền:</span>
+                        <span className="font-bold text-red text-2xl">{formatPrice(totalPrice + 25000)}</span>
+                    </div>
+                </div>
+
+                <p className="text-red-500 text-xs sm:text-sm text-center mb-4 sm:mb-6">
+                    Hãy bấm HOÀN TẤT nếu tất cả thông tin trên đã chính xác bạn nhé
+                </p>
+
+                {/* Buttons */}
+                <div className="flex justify-center gap-4">
+                    <Button
+                        size="large"
+                        onClick={onPrev}
+                        className="min-w-[120px]"
+                    >
+                        QUAY LẠI
+                    </Button>
+                    <Button
+                        type="primary"
+                        size="large"
+                        onClick={handleConfirmClick}
+                        className="min-w-[120px] bg-blue-500"
+                        loading={isUploading}
+                    >
+                        HOÀN TẤT
+                    </Button>
+                </div>
+            </div>
+            <ConfirmOrderModal
+                isOpen={isModalOpen}
+                onConfirm={handleModalConfirm}
+                onCancel={handleModalCancel}
+                totalImages={totalImages}
+                totalPrice={totalPrice}
+                isLoading={isUploading}
+            />
         </div>
     );
 };

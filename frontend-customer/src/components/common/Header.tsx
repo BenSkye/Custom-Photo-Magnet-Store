@@ -15,7 +15,7 @@ const Header: React.FC = () => {
     ];
 
     return (
-        <header className="fixed w-full z-10 flex justify-center items-center bg-white lg:py-2 ">
+        <header className="fixed w-full flex justify-center items-center bg-white lg:py-2 ">
             <Menu
                 mode="horizontal"
                 defaultSelectedKeys={['/']}
@@ -25,9 +25,9 @@ const Header: React.FC = () => {
                     border: 'none',
 
                 }}
-                className="hidden lg:flex !flex-nowrap"  // Ngăn items bị wrap
+                className="hidden lg:flex !flex-nowrap"
                 overflowedIndicator={null}
-                disabledOverflow={true}  // Vô hiệu hóa overflow behavior của Ant Design
+                disabledOverflow={true}
             />
             <Button
                 type="text"

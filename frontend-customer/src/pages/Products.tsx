@@ -4,7 +4,7 @@ import { AnimateWrapper } from '../utils/animate/AnimateWrapper';
 
 export default function Products() {
     return (
-        <div className="container mx-auto px-4 mt-0">
+        <div className="container mx-auto mt-0">
             <AnimateWrapper variant="slideLeft" delay={0.2}>
                 <h2 className="text-2xl font-bold text-center mb-8">Sản phẩm</h2>
                 <div className="container mx-auto px-4">

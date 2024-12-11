@@ -4,6 +4,7 @@ import Products from '../pages/Products';
 import Reviews from '../pages/Reviews';
 import Contact from '../pages/Contact';
 import Order from '../pages/Order';
+import Information from '../pages/Information';
 
 export const routes: AppRoute[] = [
   {
@@ -35,5 +36,11 @@ export const routes: AppRoute[] = [
     key: 'order',
     label: 'Đặt hàng',
     element: <Order />,
+  },
+  {
+    path: '/information',
+    key: 'information',
+    label: 'Thông tin',
+    element: <Information />,
   },
 ];

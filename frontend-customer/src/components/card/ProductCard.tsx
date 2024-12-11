@@ -30,7 +30,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </div>
             <div>
                 <div className="mb-4 flex items-center">
-                    <DollarOutlined className="text-red-500 mr-2 text-xl" />
+                    <DollarOutlined className="text-red mr-2 text-xl" />
                     <span className="text-sm text-gray-600">Giá: </span>
                     <span className="text-2xl font-bold text-red ml-1">{price}</span>
                     <span className="text-sm text-gray-600">/{priceUnit}</span>

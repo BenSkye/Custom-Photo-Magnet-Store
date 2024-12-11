@@ -1,6 +1,7 @@
 import { Button } from '../../button/Button';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { ZALO_PHONE } from '../../../utils/constants';
 
 export const HeroSection = () => {
     return (
@@ -24,12 +25,14 @@ export const HeroSection = () => {
                             ĐẶT NGAY
                         </Button>
                     </Link>
-                    <Button
-                        variant="secondary"
-                        icon={<img src='/icons8-zalo-32.png' className="w-6 h-6" />}  // Thêm icon Zalo
-                    >
-                        NHẮN ZALO
-                    </Button>
+                    <a href={`https://zalo.me/${ZALO_PHONE}`} target="_blank" rel="noopener noreferrer">
+                        <Button
+                            variant="secondary"
+                            icon={<img src='/icons8-zalo-32.png' className="w-6 h-6" />}
+                        >
+                            NHẮN ZALO
+                        </Button>
+                    </a>
                 </div>
             </div>
 

@@ -16,6 +16,7 @@ import paymentRouter from './payment';
 import notificationRouter from './notificationRouter';
 import orderRouter from './order';
 import feedbackRouter from './feedback';
+import priceConfigRouter from './configPrice';
 
 
 const router = Router();
@@ -27,6 +28,7 @@ const router = Router();
 
 router.use('/v1/api/order', orderRouter);
 router.use('/v1/api/feedback', feedbackRouter);
+router.use('/v1/api/config-price', priceConfigRouter);
 router.use('/v1/api/checkout', checkoutRouter);
 router.use('/v1/api/user', accessRouter);
 router.use('/v1/api/payos', payosRouter);
@@ -43,7 +45,7 @@ router.use('/v1/api/payment', paymentRouter);
 router.use('/v1/api/notification', notificationRouter);
 
 router.use('/', (req: Request, res: Response) => {
-    res.send('FindJob API');
+    res.send('AnhNamCham API');
 });
 
 export default router;

@@ -1,4 +1,4 @@
-import { ProductCardProps } from '../../types/productCardProps';
+import { IProductCardProps } from '../../types/productCardProps';
 import { Card } from 'antd';
 import { Button } from '../button/Button';
 import {
@@ -7,8 +7,9 @@ import {
     ShoppingCartOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { formatPrice } from '../../utils/format/formatPrice';
 
-export const ProductCard: React.FC<ProductCardProps> = ({
+export const ProductCard: React.FC<IProductCardProps> = ({
     image,
     title,
     description,
@@ -32,7 +33,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 <div className="mb-4 flex items-center">
                     <DollarOutlined className="text-red mr-2 text-xl" />
                     <span className="text-sm text-gray-600">Giá: </span>
-                    <span className="text-2xl font-bold text-red ml-1">{price}</span>
+                    <span className="text-2xl font-bold text-red ml-1">{formatPrice(price)}</span>
                     <span className="text-sm text-gray-600">/{priceUnit}</span>
                 </div>
                 <div className="flex lg:flex-row gap-2 flex-col">

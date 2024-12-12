@@ -25,6 +25,11 @@ export const PRICE = {
     PRICE_SHIPPING: 25000,
 }
 
+export const PRICE_CONFIG = {
+    MIN: 0,
+    MAX: 1000000000,
+}
+
 export const BULK = {
     BULK_DISCOUNT_THRESHOLD: 6
 }
@@ -55,5 +60,8 @@ export const COMMENT = {
 }
 
 export const IS_ACTIVE = {
-    DEFAULT: true
+    DEFAULT: true,
+    DEFAULT_INACTIVE: false,
 }
+
+

@@ -50,7 +50,7 @@ export default function GallerySection() {
             <h2 className="text-2xl font-bold text-center mb-8">HÌNH ẢNH</h2>
 
             {/* Gallery Grid */}
-            <div className="grid grid-cols-4 md:grid-cols-6 gap-4">
+            <div className="grid grid-cols-4 md:grid-cols-6 gap-1 md:gap-2">
                 {galleryImages.map((image) => (
                     <Image
                         key={image.id}

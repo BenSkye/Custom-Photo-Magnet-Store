@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { message, Steps } from 'antd';
 import { UploadStep } from '../components/order/UploadStep';
 import { InfoStep } from '../components/order/InfoStep';
@@ -14,10 +14,6 @@ export default function Order() {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [imageQuantities, setImageQuantities] = useState<ImageQuantity[]>([]);
     const [orderInfo, setOrderInfo] = useState<OrderInfo | undefined>(undefined);
-
-    useEffect(() => {
-        console.log(fileList, imageQuantities, orderInfo);
-    }, [fileList, imageQuantities, orderInfo]);
 
     const next = () => {
         setCurrent(current + 1);

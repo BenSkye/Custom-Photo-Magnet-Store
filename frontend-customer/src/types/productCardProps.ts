@@ -1,7 +1,7 @@
-export interface ProductCardProps {
+export interface IProductCardProps {
     image: string;
     title: string;
     description: string;
-    price: string;
+    price: number;
     priceUnit: string;
 }

@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import { IPriceConfig } from "../interface/priceConfig.interface";
-import { COLLECTION_DOCUMENT_NAME, COLLECTION_NAME_CONST } from '../utils/constants';
+import { COLLECTION_DOCUMENT_NAME, COLLECTION_NAME_CONST, IS_ACTIVE } from '../utils/constants';
 
 const priceConfigSchema = new Schema<IPriceConfig>({
     normalPerImagePrice: {
@@ -21,7 +21,8 @@ const priceConfigSchema = new Schema<IPriceConfig>({
     },
     isActive: {
         type: Boolean,
-        required: true
+        required: true,
+        default: IS_ACTIVE.DEFAULT,
     }
 }, {
     timestamps: true,

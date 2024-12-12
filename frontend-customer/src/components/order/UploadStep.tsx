@@ -1,9 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Upload, Button, message, Image } from 'antd';
 import { InboxOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { formatPrice } from '../../utils/format/formatPrice';
 import { IndexedDBService } from '../../services/indexedDBService';
+import { ImageQuantity } from '../../types/imageQuantity';
+import { getCurrentPriceConfig } from '../../services/priceConfigService';
+import { IPriceConfig } from '../../types/priceConfig';
+import { UploadStepSkeleton } from '../card/UploadStepSkeleton';
+
+
 
 const { Dragger } = Upload;
 
@@ -15,18 +21,28 @@ interface UploadStepProps {
     onNext: () => void;
 }
 
-interface ImageQuantity {
-    uid: string;
-    quantity: number;
-}
-
-
 export const UploadStep: React.FC<UploadStepProps> = ({ fileList,
     setFileList,
     imageQuantities,
     setImageQuantities,
     onNext }) => {
+
     const indexedDBService = new IndexedDBService();
+    const [priceConfig, setPriceConfig] = useState<IPriceConfig | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchPriceConfig = async () => {
+            try {
+                const response = await getCurrentPriceConfig();
+                setPriceConfig(response.metadata);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching price config:', error);
+            }
+        };
+        fetchPriceConfig();
+    }, []);
 
     useEffect(() => {
         const loadSavedFiles = async () => {
@@ -76,10 +92,12 @@ export const UploadStep: React.FC<UploadStepProps> = ({ fileList,
         const totalQuantity = fileList.reduce((sum, file) => {
             return sum + getQuantity(file.uid);
         }, 0);
-        const pricePerImage = totalQuantity >= 6 ? 20000 : 25000;
+        const pricePerImage =
+            totalQuantity >= (priceConfig?.bulkDiscountThreshold || 0) ?
+                (priceConfig?.bulkPerImagePrice || 0) :
+                (priceConfig?.normalPerImagePrice || 0);
         return totalQuantity * pricePerImage;
     };
-
 
     const handleChange = async (info: any) => {
         let newFileList = [...info.fileList];
@@ -134,6 +152,10 @@ export const UploadStep: React.FC<UploadStepProps> = ({ fileList,
         }
     };
 
+    if (loading || !priceConfig) {
+        return <UploadStepSkeleton />;
+    }
+
     return (
         <div className="max-w-2xl mx-auto">
             <div className="max-w-2xl mx-auto">
@@ -153,10 +175,10 @@ export const UploadStep: React.FC<UploadStepProps> = ({ fileList,
 
                     <p className="text-center font-medium">
                         <span className="text-gray">Giá ảnh: </span>
-                        <span className="text-red">25.000₫/ảnh</span>
+                        <span className="text-red">{formatPrice(priceConfig?.normalPerImagePrice || 0)}/ảnh</span>
                         <span className="mx-2 text-gray-400">|</span>
-                        <span className="text-gray">Từ 6 ảnh: </span>
-                        <span className="text-green">20.000₫/ảnh</span>
+                        <span className="text-gray">Từ {priceConfig?.bulkDiscountThreshold || 0} ảnh: </span>
+                        <span className="text-green">{formatPrice(priceConfig?.bulkPerImagePrice || 0)}/ảnh</span>
                     </p>
 
                     <p className="ant-upload-text">Bấm để tải ảnh lên</p>
@@ -222,7 +244,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({ fileList,
                     <div className="flex justify-between items-center mb-4">
                         <span>Giá mỗi ảnh:</span>
                         <span className="font-semibold">
-                            {fileList.reduce((sum, file) => sum + getQuantity(file.uid), 0) >= 6 ? '20,000₫' : '25,000₫'}
+                            {fileList.reduce((sum, file) => sum + getQuantity(file.uid), 0) >= (priceConfig?.bulkDiscountThreshold || 0) ? formatPrice(priceConfig?.bulkPerImagePrice || 0) : formatPrice(priceConfig?.normalPerImagePrice || 0)}
                         </span>
                     </div>
                     <div className="flex justify-between items-center text-2xl font-bold">

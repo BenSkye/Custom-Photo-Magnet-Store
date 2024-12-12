@@ -7,7 +7,7 @@ export interface IPriceConfig{
     isActive: boolean;
 }
 
-export interface IPriceConfigCreate {
+export interface IPriceConfigRequest {
     normalPerImagePrice: number;
     bulkPerImagePrice: number;
     shippingFee: number;

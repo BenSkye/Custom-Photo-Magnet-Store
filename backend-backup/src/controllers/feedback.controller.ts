@@ -2,6 +2,7 @@ import  FeedbackService from '../services/feedback.service';
 import { asyncHandler } from '../helpers/asyncHandler';
 import { Request, Response, NextFunction } from 'express';
 import { CREATED, SuccessResponse } from '../core/success.response';
+import { PaginationOptions } from '../interface/pagination.interface';
 
 class FeedbackController {
  
@@ -14,12 +15,14 @@ class FeedbackController {
     });
 
     getAllFeedback = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const feedbacks = await FeedbackService.getAllFeedback();
+        const { page, limit, sortBy, sortOrder } = req.query;
+        const options: PaginationOptions = { page: Number(page), limit: Number(limit), sortBy: String(sortBy), sortOrder: String(sortOrder) as "asc" | "desc" | undefined };
+        const feedbacks = await FeedbackService.getAllFeedback(options);
         new SuccessResponse({
             message: 'Get all feedbacks successfully',
             metadata: feedbacks,
         }).send(res);
-    });
+  });
 
     getFeedbackById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         const feedback = await FeedbackService.getFeedbackById(req.params.id);
@@ -41,6 +44,16 @@ class FeedbackController {
         new SuccessResponse({
             message: 'Delete feedback successfully',
             metadata: await FeedbackService.deleteFeedback(req.params.id),
+        }).send(res);
+    });
+
+    getAllFeedbackIsActive = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const { page, limit, sortBy, sortOrder } = req.query;
+        const options: PaginationOptions = { page: Number(page), limit: Number(limit), sortBy: String(sortBy), sortOrder: String(sortOrder) as "asc" | "desc" | undefined };
+        const feedbacks = await FeedbackService.getAllFeedbackIsActive(options);
+        new SuccessResponse({
+            message: 'Get all feedbacks successfully',
+            metadata: feedbacks,
         }).send(res);
     });
 }

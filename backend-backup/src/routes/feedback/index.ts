@@ -7,18 +7,18 @@ import { authentication } from '../../auth/authUtils';
 const feedbackRouter = Router();
 
 feedbackRouter.post('/', validateFeedback, feedbackController.createFeedback)
-feedbackRouter.get('/', feedbackController.getAllFeedback)
+feedbackRouter.get('/customer', feedbackController.getAllFeedbackIsActive)
 feedbackRouter.get('/:id', feedbackController.getFeedbackById)
 
 //Admin Authentication
+//////////////////////////
 feedbackRouter.use(authentication);
-
-////////////////////////////
 feedbackRouter.use(apiKey)
 feedbackRouter.use(permission('admin'));
 ////////////////////////////
 
 feedbackRouter.put('/status/:id', feedbackController.updateStatusFeedback)
 // feedbackRouter.delete('/:id', feedbackController.deleteFeedback)
+feedbackRouter.get('/admin', feedbackController.getAllFeedback)
 
 export default feedbackRouter;

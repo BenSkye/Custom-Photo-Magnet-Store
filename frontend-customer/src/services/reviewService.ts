@@ -1,5 +1,7 @@
 import apiClient from './apiClientService';
 import { Review } from '../types/review';
+import { PaginationParams } from '../types/pagination';
+
 
 export const createReview = async (review: Review) => {
     try {
@@ -11,13 +13,17 @@ export const createReview = async (review: Review) => {
     }
 }
 
-export const getReviews = async () => {
+export const getReviews = async (paginationParams: PaginationParams) => {
+  
     try {
-        const response = await apiClient.get('/v1/api/feedback');
+        const response = await apiClient.get('/v1/api/feedback/customer', {
+            params: paginationParams
+        });
         return response.data;
     } catch (error) {
         console.error('Error getting reviews:', error);
         throw error;
     }
 }
+
 

@@ -11,9 +11,9 @@ export const PROVINCE_ID = {
 
 export const ZALO_PHONE = '0357223172';
 
-export const ORDER_STATUS = {
-    SUCCESS: 'success',
-    FAILURE: 'failure',
+export enum ORDER_STATUS {
+    SUCCESS = 'success',
+    FAILURE = 'failure',
 }
 
 export const STATUS_CODE = {
@@ -24,3 +24,16 @@ export const STATUS_CODE = {
     DELETE_SUCCESS: 200,
     DELETE_ERROR: 400,
 }
+
+export const ANONYMOUS_REVIEW_LIMIT = 4;
+
+export enum SORT_BY {
+    CREATED_AT = 'createdAt',
+    UPDATED_AT = 'updatedAt',
+}
+
+export enum SORT_ORDER {
+    ASC = 'asc',
+    DESC = 'desc',
+}
+

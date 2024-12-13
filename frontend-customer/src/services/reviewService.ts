@@ -14,7 +14,6 @@ export const createReview = async (review: Review) => {
 }
 
 export const getReviews = async (paginationParams: PaginationParams) => {
-  
     try {
         const response = await apiClient.get('/v1/api/feedback/customer', {
             params: paginationParams

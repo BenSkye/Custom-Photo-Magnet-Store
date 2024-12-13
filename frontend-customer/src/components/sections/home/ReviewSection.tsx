@@ -19,8 +19,7 @@ export const ReviewSection = () => {
     return (
         <section className="mt-8 bg-gray-50">
             <div className="container mx-auto">
-                <h2 className="text-3xl font-bold text-center mb-8">CÁC ĐÁNH GIÁ</h2>
-
+                <h2 className="text-2xl font-bold text-center mb-8">CÁC ĐÁNH GIÁ TỪ KHÁCH HÀNG</h2>
                 <div className="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-1 md:gap-2">
                     <Image.PreviewGroup
                         preview={{

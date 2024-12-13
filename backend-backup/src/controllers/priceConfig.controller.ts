@@ -5,13 +5,12 @@ import { CREATED, SuccessResponse } from '../core/success.response';
 
 class PriceConfigController {
     createPriceConfig = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const { normalPerImagePrice, bulkPerImagePrice, shippingFee, bulkDiscountThreshold } = req.body;
+    const { normalPerImagePrice, bulkPerImagePrice, bulkDiscountThreshold } = req.body;
     new CREATED({
         message: 'Create price config successfully',
         metadata: await PriceConfigService.createPriceConfig({
             normalPerImagePrice,
             bulkPerImagePrice,
-            shippingFee,
             bulkDiscountThreshold,
             }),
         }).send(res);

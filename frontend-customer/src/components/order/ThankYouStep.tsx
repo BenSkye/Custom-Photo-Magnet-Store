@@ -30,16 +30,20 @@ export const ThankYouStep: React.FC = () => {
                 </h2>
 
                 <p className="text-gray-600 mb-6">
-                    Đơn hàng của bạn đã được xác nhận. Vui lòng liên hệ Zalo{' '}
+                    Đơn hàng của bạn đã được xác nhận. Vui lòng liên hệ {' '}
                     <a
                         href={`https://zalo.me/${ZALO_PHONE}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 font-medium"
+                        className="text-blue-500 font-medium text-blue"
                     >
-                        {ZALO_PHONE}
+                        Zalo: {ZALO_PHONE} {' '}
                     </a>
-                    để biết thêm chi tiết về đơn hàng.
+                    nếu có bất kỳ thắc mắc nào hoặc cần hỗ trợ.
+                </p>
+
+                <p className="text-gray-600 mb-6">
+                    Chúng tôi sẽ liên hệ lại với bạn trong thời gian sớm nhất.
                 </p>
 
                 <Button

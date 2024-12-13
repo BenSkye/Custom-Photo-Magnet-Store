@@ -37,7 +37,7 @@ export const ConfirmOrderModal: React.FC<ConfirmOrderModalProps> = ({
             <p>Bạn có chắc chắn muốn đặt hàng với thông tin đã nhập?</p>
             <div className="mt-4 text-gray-600">
                 <p>Tổng số ảnh: x{totalImages}</p>
-                <p className="text-lg">Tổng tiền: <span className="font-bold text-red">{formatPrice(totalPrice + 25000)}</span></p>
+                <p className="text-lg">Tổng tiền: <span className="font-bold text-red">{formatPrice(totalPrice)}</span></p>
             </div>
         </Modal>
     );

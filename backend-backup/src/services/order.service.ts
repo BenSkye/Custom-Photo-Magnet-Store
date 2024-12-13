@@ -64,13 +64,12 @@ class OrderService {
             ? priceConfig.bulkPerImagePrice 
             : priceConfig.normalPerImagePrice;
         
-        // Tính tổng tiền và phí ship
-        const totalAmount = totalQuantity * pricePerImage + priceConfig.shippingFee;
+        // Tính tổng tiền
+        const totalAmount = totalQuantity * pricePerImage;
 
         return {
             totalQuantity,
             pricePerImage,
-            shippingFee: priceConfig.shippingFee,
             totalAmount
         };
     }

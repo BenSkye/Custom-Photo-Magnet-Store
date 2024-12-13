@@ -46,9 +46,9 @@ class PriceConfigService {
         if (data.bulkPerImagePrice < this.PRICE_CONFIG_MIN) {
             throw new BadRequestError(`Price ${data.bulkPerImagePrice} must be greater than ${this.PRICE_CONFIG_MIN}`);
         }
-        if (data.shippingFee < this.PRICE_CONFIG_MIN) {
-            throw new BadRequestError(`Price ${data.shippingFee} must be greater than ${this.PRICE_CONFIG_MIN}`);
-        }
+        // if (data.shippingFee < this.PRICE_CONFIG_MIN) {
+        //     throw new BadRequestError(`Price ${data.shippingFee} must be greater than ${this.PRICE_CONFIG_MIN}`);
+        // }
     }
 }
 

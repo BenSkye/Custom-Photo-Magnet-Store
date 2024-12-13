@@ -12,8 +12,8 @@ export const getProducts = async () => {
             {
                 image: '/combo.jpg',
                 title: `Combo từ ${priceConfig.bulkDiscountThreshold} ảnh`,
-                description: `Đặt in ảnh nam châm theo combo để được ưu đãi với giá tốt nhất. Nguyên 1 bộ ${priceConfig.bulkDiscountThreshold} ảnh chỉ có giá ${priceConfig.normalPerImagePrice * priceConfig.bulkDiscountThreshold} thôi...`,
-                price: priceConfig.normalPerImagePrice * priceConfig.bulkDiscountThreshold,
+                description: `Đặt in ảnh nam châm theo combo để được ưu đãi với giá tốt nhất. Nguyên 1 bộ ${priceConfig.bulkDiscountThreshold} ảnh chỉ có giá ${priceConfig.bulkPerImagePrice * priceConfig.bulkDiscountThreshold} thôi...`,
+                price: priceConfig.bulkPerImagePrice * priceConfig.bulkDiscountThreshold,
                 priceUnit: 'bộ',
             },
             {

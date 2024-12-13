@@ -19,11 +19,11 @@ export const ORDER_STATUS = {
     FAILED: 'failed',
 }
 
-export const PRICE = {
-    PRICE_PER_IMAGE: 25000,
-    BULK_DISCOUNT_PRICE: 20000,
-    PRICE_SHIPPING: 25000,
-}
+// export const PRICE = {
+//     PRICE_PER_IMAGE: 25000,
+//     BULK_DISCOUNT_PRICE: 20000,
+//     PRICE_SHIPPING: 25000,
+// }
 
 export const PRICE_CONFIG = {
     MIN: 0,

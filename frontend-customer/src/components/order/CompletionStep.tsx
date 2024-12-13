@@ -3,9 +3,12 @@ import { Button, message } from 'antd';
 import { OrderInfo } from '../../types/orderInfor';
 import { formatPrice } from '../../utils/format/formatPrice';
 import { ConfirmOrderModal } from '../modal/ConfirmOrderModal';
-import { FIREBASE_STORAGE_PATH } from '../../utils/constants';
+import { FIREBASE_STORAGE_PATH, STATUS_CODE } from '../../utils/constants';
 import { uploadImages } from '../../services/uploadService';
 import { IndexedDBService } from '../../services/indexedDBService';
+import { createOrder } from '../../services/orderService';
+import { IOrderRequest } from '../../types/order';
+
 
 const indexedDBService = new IndexedDBService();
 interface CompletionStepProps {
@@ -13,7 +16,7 @@ interface CompletionStepProps {
     totalImages: number;
     totalPrice: number;
     onPrev: () => void;
-    onConfirm: () => void;
+    onConfirm: (isSuccess: boolean) => void;
 }
 interface SavedFile {
     file: File;
@@ -38,7 +41,6 @@ export const CompletionStep: React.FC<CompletionStepProps> = ({
     const handleModalConfirm = async () => {
         setIsUploading(true);
         try {
-            // Hiển thị loading message
             const loadingMessage = message.loading('Đang xử lý đơn hàng...', 0);
 
             // Lấy files từ IndexedDB
@@ -46,49 +48,58 @@ export const CompletionStep: React.FC<CompletionStepProps> = ({
 
             // Upload từng file lên Firebase
             const uploadPromises = savedFiles.map(async (savedFile: SavedFile) => {
-                const result = await uploadImages(savedFile.file, `${FIREBASE_STORAGE_PATH.ORDERS_IMG}/${Date.now()}-${savedFile.name}`);
+                const imageUrl = await uploadImages(savedFile.file, `${FIREBASE_STORAGE_PATH.ORDERS_IMG}/${Date.now()}-${savedFile.name}`);
                 return {
-                    url: result,
-                    quantity: savedFile.quantity || 1,
-                    name: savedFile.name
+                    imageUrl,
+                    quantity: savedFile.quantity || 1
                 };
             });
 
-            const uploadedResults = await Promise.all(uploadPromises);
+            const uploadedImages = await Promise.all(uploadPromises);
 
-            // Tạo đơn hàng với URLs của ảnh đã upload
-            const orderData = {
-                ...orderInfo,
-                images: uploadedResults,
-                totalImages,
-                totalPrice: totalPrice + 25000,
-                status: 'pending',
-                createdAt: new Date().toISOString()
+            const orderPayload: IOrderRequest = {
+                customer: {
+                    fullName: orderInfo?.fullName || '',
+                    phone: orderInfo?.phone || '',
+                    address: {
+                        district: orderInfo?.district || '',
+                        ward: orderInfo?.ward || '',
+                        detailAddress: orderInfo?.address || ''
+                    },
+                    note: orderInfo?.note
+                },
+                orderItems: uploadedImages
             };
 
-            // Lưu đơn hàng vào database
-            // await createOrder(orderData);
-            console.log('Order Data:', orderData);
+            // Gọi API tạo order
+            const response = await createOrder(orderPayload);
 
-            // Xóa files đã upload khỏi IndexedDB
-            await indexedDBService.clearIndexedDB();
-
+            if (response.status === STATUS_CODE.CREATE_SUCCESS) {
+                message.success('Đặt hàng thành công!');
+                // Xóa files đã upload khỏi IndexedDB
+                await indexedDBService.clearIndexedDB();
+                // Gửi thông báo thành công
+                onConfirm(true);
+            } else {
+                message.error('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
+                // Gửi thông báo thất bại
+                onConfirm(false);
+            }
             // Đóng loading message
             loadingMessage();
-
-            // Hiển thị thông báo thành công
-            message.success('Đặt hàng thành công!');
-
             // Đóng modal và chuyển đến bước tiếp theo
             setIsModalOpen(false);
-            onConfirm();
         } catch (error) {
             console.error('Error processing order:', error);
             message.error('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
+            // Gửi thông báo thất bại
+            onConfirm(false);
         } finally {
             setIsUploading(false);
+            setIsModalOpen(false);
         }
     };
+
     const handleModalCancel = () => {
         setIsModalOpen(false);
     };
@@ -130,15 +141,11 @@ export const CompletionStep: React.FC<CompletionStepProps> = ({
                     </div>
                     <div className="flex justify-between">
                         <span className="text-gray-600">Tiền ảnh:</span>
-                        <span className="font-medium">{formatPrice(totalPrice || 0)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-gray-600">Phí ship:</span>
-                        <span className="font-medium">25.000₫</span>
+                        <span className="font-medium">{formatPrice(totalPrice)}</span>
                     </div>
                     <div className="border-t pt-2 flex justify-between">
                         <span className="font-bold">Tổng tiền:</span>
-                        <span className="font-bold text-red text-2xl">{formatPrice(totalPrice + 25000)}</span>
+                        <span className="font-bold text-red text-2xl">{formatPrice(totalPrice)}</span>
                     </div>
                 </div>
 

@@ -7,7 +7,7 @@ import { IndexedDBService } from '../../services/indexedDBService';
 import { ImageQuantity } from '../../types/imageQuantity';
 import { getCurrentPriceConfig } from '../../services/priceConfigService';
 import { IPriceConfig } from '../../types/priceConfig';
-import { UploadStepSkeleton } from '../card/UploadStepSkeleton';
+import { UploadStepSkeleton } from '../skeleton/UploadStepSkeleton';
 
 
 

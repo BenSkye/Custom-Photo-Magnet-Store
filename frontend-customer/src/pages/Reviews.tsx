@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Review } from '../types/review';
-import { Form, Select, Button, Rate } from 'antd';
+import { Form, Select, Button, Rate, Image } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import ReviewModal from '../components/modal/ReviewModal';
 import { AnimateWrapper } from '../utils/animate/AnimateWrapper';
@@ -17,16 +17,16 @@ const initialReviews: Review[] = [
 ];
 
 const reviewImages = [
-    '/hinhanh.jpg',
-    '/hinhanh.jpg',
-    '/hinhanh.jpg',
-    '/hinhanh.jpg',
-    '/hinhanh.jpg',
-    '/hinhanh.jpg',
-    '/hinhanh.jpg',
-    '/hinhanh.jpg',
-    '/hinhanh.jpg',
-    '/hinhanh.jpg',
+    '/reviews.jpg',
+    '/reviews.jpg',
+    '/reviews.jpg',
+    '/reviews.jpg',
+    '/reviews.jpg',
+    '/reviews.jpg',
+    '/reviews.jpg',
+    '/reviews.jpg',
+    '/reviews.jpg',
+    '/reviews.jpg',
 ];
 
 export default function Reviews() {
@@ -46,7 +46,7 @@ export default function Reviews() {
         : reviews;
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto lg:px-4">
             <AnimateWrapper delay={0.2} variant='slideDown' >
                 <h1 className="text-3xl font-bold text-center mb-4">ĐÁNH GIÁ</h1>
                 <p className="text-center mb-8">Dưới đây là đánh giá của những khách hàng đã từng mua sản phẩm của tụi mình nè ...</p>
@@ -54,13 +54,17 @@ export default function Reviews() {
 
             {/* Gallery Grid */}
             <AnimateWrapper delay={0.2} variant='slideLeft' >
-                <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-9 gap-4 mb-8">
-                    {reviewImages.map((image, index) => (
-                        <div key={index} className="aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow">
-                            <img
+                <div className="grid grid-cols-5 md:grid-cols-6 lg:grid-cols-8 lg:gap-4 gap-1 lg:mb-8">
+                    {reviewImages.slice(0, 10).map((image, index) => (
+                        <div
+                            key={index}
+                            className="relative rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300"
+                        >
+                            <Image
                                 src={image}
                                 alt={`Review ${index + 1}`}
-                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                className="w-full h-full object-cover"
+                                loading="lazy"
                             />
                         </div>
                     ))}

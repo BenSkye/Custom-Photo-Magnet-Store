@@ -1,5 +1,5 @@
 {
-  "name": "web_bakery_market_be",
+  "name": "anhnamcham",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -36,6 +36,7 @@
     "@types/dateformat": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
+    "anhnamcham": "file:",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "compression": "^1.7.4",

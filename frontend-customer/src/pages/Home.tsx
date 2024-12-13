@@ -14,7 +14,6 @@ export default function Home() {
     const [products, setProducts] = useState<IProductCardProps[]>([]);
     const [loading, setLoading] = useState(true);
 
-
     useEffect(() => {
         const fetchProducts = async () => {
             try {

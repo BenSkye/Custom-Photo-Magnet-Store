@@ -8,12 +8,6 @@ import { AnimateWrapper } from '../utils/animate/AnimateWrapper';
 const initialReviews: Review[] = [
     // { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'Sản phẩm rất tốt!', rating: 5 },
     // { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'Sản phẩm rất tốt!', rating: 5 },
-    { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'ádsadsdsadsadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasaddddddddddddddddddddddđ', rating: 5 },
-    { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'Sản phẩm rất tốt!', rating: 5 },
-    { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'Sản phẩm rất tốt!', rating: 5 },
-    { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'Sản phẩm rất tốt!', rating: 5 },
-    { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'Sản phẩm rất tốt!', rating: 5 },
-    { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'Sản phẩm rất tốt!', rating: 5 },
 ];
 
 const reviewImages = [

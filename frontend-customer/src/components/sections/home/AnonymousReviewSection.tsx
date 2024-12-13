@@ -1,36 +1,43 @@
 import { StarFilled } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Review } from '../../../types/review';
+import { useEffect, useState } from 'react';
+import { getReviews } from '../../../services/reviewService';
+import { PaginationParams } from '../../../types/pagination';
+import { SORT_BY, SORT_ORDER } from '../../../utils/constants';
+import { calculateTimeDistance } from '../../../utils/format/formateDate';
+
 
 
 export const AnonymousReviewSection = () => {
-    const reviews: Review[] = [
-        {
-            name: "Khách hàng",
-            role: "Khách mua hàng",
-            comment: "Rất hài lòng với sản phẩm, in ảnh đẹp và chất lượng",
-            rating: 4,
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [loading, setLoading] = useState(true);
+    const paginationParams: PaginationParams = { page: 1, limit: 4, sortBy: SORT_BY.CREATED_AT, sortOrder: SORT_ORDER.ASC };
 
-        },
-        {
-            name: "Khách hàng",
-            role: "Khách mua hàng",
-            comment: "Shop phục vụ nhiệt tình, giao hàng nhanh",
-            rating: 5,
-        },
-        {
-            name: "Khách hàng",
-            role: "Khách mua hàng",
-            comment: "Sản phẩm chất lượng, giá cả hợp lý",
-            rating: 4,
-        },
-        {
-            name: "Khách hàng",
-            role: "Khách mua hàng",
-            comment: "Sản phẩm chất lượng, giá cả hợp lý",
-            rating: 4,
-        },
-    ];
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await getReviews(paginationParams);
+                const reviews = response.metadata.data;
+                console.log('====================================');
+                console.log(response);
+                console.log('====================================');
+                console.log(reviews);
+                console.log('====================================');
+                setReviews(reviews);
+            } catch (error) {
+                console.error('Error fetching reviews:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchReviews();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <section className="py-6">
@@ -59,6 +66,7 @@ export const AnonymousReviewSection = () => {
                                 ))}
                             </div>
                             <p className="text-gray-700">{review.comment}</p>
+                            <p> {calculateTimeDistance(review.createdAt)}</p>
                         </div>
                     ))}
                 </div>

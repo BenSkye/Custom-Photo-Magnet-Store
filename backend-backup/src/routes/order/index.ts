@@ -6,16 +6,15 @@ import { authentication } from '../../auth/authUtils';
 
 const orderRouter = Router();
 
-//Customer
-orderRouter.get('/', orderController.getOrderById);
 orderRouter.post('/', validateOrder, orderController.createOrder);
 
 //Admin Authentication
-orderRouter.use(authentication);
 ////////////////////////////
+orderRouter.use(authentication);
 orderRouter.use(apiKey)
 orderRouter.use(permission('admin'));
 ////////////////////////////
+
 orderRouter.get('/:id', orderController.getOrderById);
 orderRouter.put('/:id', orderController.updateStatusOrder);
 orderRouter.get('/', orderController.getAllOrder);

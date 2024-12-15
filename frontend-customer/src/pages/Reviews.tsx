@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { Review } from '../types/review';
-import { Form, Select, Button, Rate, Image } from 'antd';
+import { useEffect, useState } from 'react';
+import { Form, Button, Image, message } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import ReviewModal from '../components/modal/ReviewModal';
 import { AnimateWrapper } from '../utils/animate/AnimateWrapper';
+import ReviewComments from '../components/sections/review/ReviewComments';
+import { Review } from '../types/review';
+import { LIMIT_PER_PAGE, SORT_BY, SORT_ORDER, STATUS_CODE } from '../utils/constants';
+import { createReview, getReviews } from '../services/reviewService';
+import { PaginationParams } from '../types/pagination';
 
-const initialReviews: Review[] = [
-    // { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'Sản phẩm rất tốt!', rating: 5 },
-    // { name: 'Nguyen Van A', role: 'Khách hàng', comment: 'Sản phẩm rất tốt!', rating: 5 },
-];
 
 const reviewImages = [
     '/reviews.jpg',
@@ -24,20 +24,71 @@ const reviewImages = [
 ];
 
 export default function Reviews() {
-    const [reviews, setReviews] = useState<Review[]>(initialReviews);
-    const [filterRating, setFilterRating] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
 
-    const handleSubmit = (values: Review) => {
-        setReviews([...reviews, values]);
-        form.resetFields();
-        setIsModalOpen(false);
+    // New states for reviews
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [reviewsLoading, setReviewsLoading] = useState(false);
+    const [totalItems, setTotalItems] = useState(0);
+    const [pagination, setPagination] = useState<PaginationParams>({
+        page: 1,
+        limit: LIMIT_PER_PAGE,
+        sortBy: SORT_BY.CREATED_AT,
+        sortOrder: SORT_ORDER.DESC
+    });
+
+    // Fetch reviews
+    useEffect(() => {
+        const fetchReviews = async () => {
+            setReviewsLoading(true);
+            try {
+                const response = await getReviews(pagination);
+                setReviews(response.metadata.data);
+                setTotalItems(response.metadata.pagination.totalItems);
+            } catch (error) {
+                console.error('Error getting reviews:', error);
+                message.error('Không thể tải bình luận. Vui lòng thử lại!');
+            } finally {
+                setReviewsLoading(false);
+            }
+        };
+        fetchReviews();
+    }, [pagination]);
+
+    // Handle pagination change
+    const handlePageChange = (page: number, pageSize: number) => {
+        setPagination({
+            ...pagination,
+            page: page,
+            limit: pageSize
+        });
     };
 
-    const filteredReviews = filterRating !== null
-        ? reviews.filter(review => review.rating === filterRating)
-        : reviews;
+    // Create review
+    const handleSubmit = async (values: Review) => {
+        setLoading(true);
+        try {
+            const response = await createReview(values);
+            if (response.status === STATUS_CODE.CREATE_SUCCESS) {
+                form.resetFields();
+                setIsModalOpen(false);
+                message.success('Bình luận đã được gửi thành công!');
+                // Refresh reviews after creating new one
+                const refreshResponse = await getReviews(pagination);
+                setReviews(refreshResponse.metadata.data);
+                setTotalItems(refreshResponse.metadata.pagination.totalItems);
+            } else {
+                message.error('Có lỗi xảy ra vui lòng thử lại!');
+            }
+        } catch (error) {
+            message.error('Có lỗi xảy ra vui lòng thử lại!');
+            console.error('Error submitting review:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="container mx-auto lg:px-4">
@@ -65,48 +116,31 @@ export default function Reviews() {
                 </div>
             </AnimateWrapper>
 
-            {/* Filter and Add Review Button */}
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-                <div className="flex items-center gap-2">
-                    <span className="font-medium">Lọc theo đánh giá:</span>
-                    <Select
-                        style={{ width: 120 }}
-                        value={filterRating}
-                        onChange={setFilterRating}
-                        placeholder="Tất cả"
-                    >
-                        <Select.Option value={null}>Tất cả</Select.Option>
-                        {[5, 4, 3, 2, 1].map(rating => (
-                            <Select.Option key={rating} value={rating}>{rating} sao</Select.Option>
-                        ))}
-                    </Select>
-                </div>
+            {/*Review Button */}
+            <div className="flex justify-end mb-8">
                 <Button type="primary" onClick={() => setIsModalOpen(true)}>
                     <EditOutlined />Viết bình luận
                 </Button>
             </div>
 
-            {/* Reviews Grid */}
-            <div className="grid grid-row gap-6">
-                {filteredReviews.length > 0 ? (filteredReviews.map((review, index) => (
-                    <div key={index} className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                        <div className="flex items-center gap-2 mb-3">
-                            <h3 className="font-bold text-lg">{review.name}</h3>
-                            <span className="text-gray-600">({review.role})</span>
-                        </div>
-                        <p className="text-gray-700 mb-3 line-clamp-3 break-all overflow-hidden text-ellipsis">
-                            {review.comment}
-                        </p>
-                        <Rate disabled defaultValue={review.rating} />
-                    </div>
-                ))) : (<>Xin lỗi, nhưng hiện tại chưa có bình luận nào!</>)}
-            </div>
+            {/* Review Comments Component */}
+            <AnimateWrapper delay={0.2} variant='slideRight' >
+                <ReviewComments
+                    reviews={reviews}
+                    loading={reviewsLoading}
+                    totalItems={totalItems}
+                    pagination={pagination}
+                    onPageChange={handlePageChange}
+                />
+            </AnimateWrapper>
 
             {/* Review Modal */}
             <ReviewModal
+                form={form}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleSubmit}
+                loading={loading}
             />
         </div>
     );

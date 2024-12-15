@@ -17,6 +17,7 @@ module.exports = {
       information: '#f8f9fa',
       zalo: '#00beff',
       red: '#ff0000',
+      'gray-300': '#e2e8f0',
     },
     extend: {
       colors: {

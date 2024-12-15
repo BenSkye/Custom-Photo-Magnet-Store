@@ -25,7 +25,8 @@ export const STATUS_CODE = {
     DELETE_ERROR: 400,
 }
 
-export const ANONYMOUS_REVIEW_LIMIT = 4;
+export const ANONYMOUS_REVIEW_LIMIT = 10;
+export const LIMIT_PER_PAGE = 10;
 
 export enum SORT_BY {
     CREATED_AT = 'createdAt',
@@ -36,4 +37,6 @@ export enum SORT_ORDER {
     ASC = 'asc',
     DESC = 'desc',
 }
+
+export const GOOGLE_MAP_URL = import.meta.env.VITE_GOOGLE_MAP_URL;
 

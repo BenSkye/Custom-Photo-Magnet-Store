@@ -38,5 +38,5 @@ export enum SORT_ORDER {
     DESC = 'desc',
 }
 
-export const GOOGLE_MAP_URL = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=landmark%2081&zoom=15&maptype=roadmap';
+export const GOOGLE_MAP_URL = import.meta.env.VITE_GOOGLE_MAP_URL;
 

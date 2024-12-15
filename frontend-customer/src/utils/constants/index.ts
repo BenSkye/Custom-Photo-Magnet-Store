@@ -25,7 +25,8 @@ export const STATUS_CODE = {
     DELETE_ERROR: 400,
 }
 
-export const ANONYMOUS_REVIEW_LIMIT = 4;
+export const ANONYMOUS_REVIEW_LIMIT = 10;
+export const LIMIT_PER_PAGE = 10;
 
 export enum SORT_BY {
     CREATED_AT = 'createdAt',
@@ -36,4 +37,6 @@ export enum SORT_ORDER {
     ASC = 'asc',
     DESC = 'desc',
 }
+
+export const GOOGLE_MAP_URL = 'https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=landmark%2081&zoom=15&maptype=roadmap';
 

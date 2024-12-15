@@ -1,21 +1,17 @@
-import { Form, Button, Modal, Input, Rate } from 'antd';
+import { Form, Button, Modal, Input, Rate, FormInstance } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { Review } from '../../types/review';
+
 
 interface ReviewModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (values: Review) => void;
+    loading: boolean;
+    form: FormInstance;
 }
 
-export default function ReviewModal({ isOpen, onClose, onSubmit }: ReviewModalProps) {
-    const [form] = Form.useForm();
-
-    const handleSubmit = (values: Review) => {
-        onSubmit(values);
-        form.resetFields();
-    };
-
+export default function ReviewModal({ isOpen, onClose, onSubmit, loading, form }: ReviewModalProps) {
     return (
         <Modal
             title="Viết bình luận"
@@ -26,7 +22,7 @@ export default function ReviewModal({ isOpen, onClose, onSubmit }: ReviewModalPr
             <Form
                 form={form}
                 layout="vertical"
-                onFinish={handleSubmit}
+                onFinish={onSubmit}
                 className="pt-4"
             >
                 <Form.Item
@@ -34,7 +30,7 @@ export default function ReviewModal({ isOpen, onClose, onSubmit }: ReviewModalPr
                     label="Tên"
                     rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
                 >
-                    <Input placeholder="Nhập tên của bạn" />
+                    <Input placeholder="Nhập tên của bạn" className='w-full border-gray-300 rounded-md' />
                 </Form.Item>
 
                 <Form.Item
@@ -42,7 +38,7 @@ export default function ReviewModal({ isOpen, onClose, onSubmit }: ReviewModalPr
                     label="Vai trò"
                     rules={[{ required: true, message: 'Vui lòng nhập vai trò!' }]}
                 >
-                    <Input placeholder="Ví dụ: Khách hàng" />
+                    <Input placeholder="Ví dụ: Khách hàng" className='w-full border-gray-300 rounded-md' />
                 </Form.Item>
 
                 <Form.Item
@@ -73,7 +69,7 @@ export default function ReviewModal({ isOpen, onClose, onSubmit }: ReviewModalPr
                     <Button onClick={onClose} className='mr-2'>
                         Hủy
                     </Button>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={loading} disabled={loading}>
                         Gửi bình luận
                     </Button>
                 </Form.Item>

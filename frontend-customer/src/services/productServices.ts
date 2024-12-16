@@ -1,5 +1,6 @@
 import { getCurrentPriceConfig } from './priceConfigService';
 import { IPriceConfig } from '../types/priceConfig';
+import { formatPrice } from '../utils/format/formatPrice';
 
 export const getProducts = async () => {
     try {
@@ -12,9 +13,9 @@ export const getProducts = async () => {
             {
                 image: '/combo.jpg',
                 title: `Combo từ ${priceConfig.bulkDiscountThreshold} ảnh`,
-                description: `Đặt in ảnh nam châm theo combo để được ưu đãi với giá tốt nhất. Nguyên 1 bộ ${priceConfig.bulkDiscountThreshold} ảnh chỉ có giá ${priceConfig.bulkPerImagePrice * priceConfig.bulkDiscountThreshold} thôi...`,
-                price: priceConfig.bulkPerImagePrice * priceConfig.bulkDiscountThreshold,
-                priceUnit: 'bộ',
+                description: `Đặt in ảnh nam châm theo combo để được ưu đãi với giá tốt nhất. Nguyên 1 bộ ${priceConfig.bulkDiscountThreshold} ảnh chỉ có giá ${formatPrice( priceConfig.bulkPerImagePrice * priceConfig.bulkDiscountThreshold)} thôi...`,
+                price: priceConfig.bulkPerImagePrice,
+                priceUnit: 'cái',
             },
             {
                 image: '/anhle.jpg',

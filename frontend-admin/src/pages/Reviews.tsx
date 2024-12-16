@@ -7,10 +7,7 @@ import { getReviews } from '../services/reviewService';
 import { PaginationParams } from '../types/pagination';
 import { message } from 'antd';
 
-
-
 export default function Reviews() {
-    // New states for reviews
     const [reviews, setReviews] = useState<Review[]>([]);
     const [reviewsLoading, setReviewsLoading] = useState(false);
     const [totalItems, setTotalItems] = useState(0);
@@ -21,7 +18,6 @@ export default function Reviews() {
         sortOrder: SORT_ORDER.DESC
     });
 
-    // Fetch reviews
     useEffect(() => {
         const fetchReviews = async () => {
             setReviewsLoading(true);

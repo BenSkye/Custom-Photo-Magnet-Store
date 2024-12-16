@@ -12,6 +12,7 @@ import { findByEmail } from './user.service';
 import { createKey, findByUserId } from './apiKey.service';
 import { companyModel } from '../models/company.model';
 import SubscriptionService from './subscription.service';
+
 const RoleUser = {
   ADMIN: 'admin',
   EMPLOYER: 'employer',

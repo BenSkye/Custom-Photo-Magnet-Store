@@ -3,12 +3,14 @@ export const COLLECTION_NAME_CONST = {
     ORDER: 'Orders',
     FEEDBACK: 'Feedbacks',
     PRICE_CONFIG: 'PriceConfigs',
+    STATUS: 'StatusOrders',
 }
 
 export const COLLECTION_DOCUMENT_NAME = {
     ORDER: 'Order',
     FEEDBACK: 'Feedback',
     PRICE_CONFIG: 'PriceConfig',
+    STATUS: 'StatusOrder',
 }
 
 export const ORDER_STATUS = {

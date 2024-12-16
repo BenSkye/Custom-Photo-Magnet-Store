@@ -91,13 +91,13 @@ class FeedbackService {
 
     
 
-    static async updateStatusFeedback(id: string, isActive: boolean) {
+    static async updateStatusFeedback(id: string) {
         try {
             const feedback = await feedbackRepo.getFeedbackById(id);
             if (!feedback) {
                 throw new BadRequestError('Feedback not found');
             }
-            return await feedbackRepo.updateStatusFeedback(id, isActive);
+            return await feedbackRepo.updateStatusFeedback(id);
         } catch (error) {
             if (error instanceof Error) {
                 throw new BadRequestError(`Error updating feedback status: ${error.message}`);

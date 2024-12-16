@@ -7,6 +7,7 @@ import ManagePrice from '../pages/ManagePrice';
 import Login from '../pages/Login';
 import ProtectedRoute from './ProtectedRoutes';
 import { Navigate } from 'react-router-dom';
+import OrderDetail from '../pages/OrderDetail';
 
 export const publicRoutes: AppRoute[] = [
   {
@@ -47,6 +48,12 @@ export const privateRoutes: AppRoute[] = [
     key: 'information',
     label: 'Thông tin',
     element: <Information />,
+  },
+  {
+    path: '/order-detail/:id',
+    key: 'order-detail',
+    label: 'Chi tiết đơn hàng',
+    element: <OrderDetail />,
   },
 ];
 

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('vi-VN', {
         year: 'numeric',
@@ -40,4 +42,8 @@ export const calculateTimeDistance = (date: string): string => {
     // Chuyển đổi thành tháng
     const months = Math.floor(days / 30);
     return `${months} tháng trước`;
+};
+
+export const formatTimeDate = (date: string): string => {
+    return dayjs(date).format('HH:mm - DD/MM/YYYY');
 };

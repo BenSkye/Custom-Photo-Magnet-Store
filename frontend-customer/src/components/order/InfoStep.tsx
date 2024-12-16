@@ -78,12 +78,14 @@ export const InfoStep: React.FC<InfoStepProps> = ({ onPrev, onNext, onSubmit, in
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-            const district = districts.find(d => d.id === values.district)?.full_name || '';
-            const ward = wards.find(w => w.id === values.ward)?.full_name || '';
-            const fullAddress = `${values.addressDetail}, ${ward}, ${district}, TP.HCM`;
+            const districtName = districts.find(d => d.id === values.district)?.full_name || '';
+            const wardName = wards.find(w => w.id === values.ward)?.full_name || '';
+            const fullAddress = `${values.addressDetail}, ${wardName}, ${districtName}, TP.HCM`;
 
             onSubmit({
                 ...values,
+                district: districtName,
+                ward: wardName,
                 address: fullAddress
             });
             onNext();

@@ -25,4 +25,14 @@ export const getReviews = async (paginationParams: PaginationParams) => {
     }
 }
 
+export const updateStatusFeedback = async (id: string) => {
+    try {
+        const response = await apiClient.put(`/v1/api/feedback/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating feedback status:', error);
+        throw error;
+    }
+}
+
 

@@ -54,10 +54,10 @@ class FeedbackRepo {
         return this.getFeedbackWithPagination({ isActive: true }, options);
     }
 
-    async updateStatusFeedback(id: string, isActive: boolean) {
+    async updateStatusFeedback(id: string) {
         return await feedbackModel.findByIdAndUpdate(
             id,
-            { isActive },
+            { isActive: false },
             { new: true }
         );
     }

@@ -33,10 +33,9 @@ class FeedbackController {
     });
 
     updateStatusFeedback = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const { isActive } = req.body;
         new SuccessResponse({
             message: 'Update feedback status successfully',
-            metadata: await FeedbackService.updateStatusFeedback(req.params.id, isActive),
+            metadata: await FeedbackService.updateStatusFeedback(req.params.id),
         }).send(res);
     });
 

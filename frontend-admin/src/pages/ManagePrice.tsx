@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Card, Form, InputNumber, Button, message } from 'antd';
+import { Card, Form, InputNumber, Button, message, Modal } from 'antd';
 import { IPriceConfig } from '../types/priceConfig';
 import { getCurrentPriceConfig, updatePriceConfig } from '../services/priceConfigService';
 import { STATUS_CODE } from '../utils/constants';
+import { formatPrice } from '../utils/format/formatPrice';
 
 export default function ManagePrice() {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [getPriceLoading, setGetPriceLoading] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [newPriceValues, setNewPriceValues] = useState<IPriceConfig | null>(null);
     const [prices, setPrices] = useState<IPriceConfig>({
         _id: '',
         isActive: true,
@@ -33,14 +36,24 @@ export default function ManagePrice() {
         }
     }, []);
 
+    const showConfirmModal = (values: IPriceConfig) => {
+        setNewPriceValues(values);
+        setIsModalVisible(true);
+    };
 
-    const onFinish = async (values: IPriceConfig) => {
+    const handleCancel = () => {
+        setIsModalVisible(false);
+        setNewPriceValues(null);
+    };
+
+    const handleConfirm = async () => {
+        if (!newPriceValues) return;
         setLoading(true);
         try {
-            const response = await updatePriceConfig(prices._id, values);
-            console.log('response', response);
+            const response = await updatePriceConfig(prices._id, newPriceValues);
             if (response.status === STATUS_CODE.UPDATE_SUCCESS) {
                 message.success('Cập nhật giá thành công');
+                setPrices(newPriceValues);
             } else {
                 message.error('Có lỗi xảy ra khi cập nhật giá');
             }
@@ -52,11 +65,12 @@ export default function ManagePrice() {
             }
         } finally {
             setLoading(false);
+            setIsModalVisible(false);
         }
     };
 
     if (getPriceLoading) {
-        return <>Loading...</>
+        return <>Loading...</>;
     }
 
     return (
@@ -66,7 +80,7 @@ export default function ManagePrice() {
                     form={form}
                     layout="vertical"
                     initialValues={prices}
-                    onFinish={onFinish}
+                    onFinish={showConfirmModal}
                 >
                     <Form.Item
                         label="Giá in ảnh thường (VNĐ/ảnh)"
@@ -78,7 +92,6 @@ export default function ManagePrice() {
                             className="w-full"
                             min={0}
                             step={1000}
-
                         />
                     </Form.Item>
 
@@ -92,7 +105,6 @@ export default function ManagePrice() {
                             className="w-full"
                             min={0}
                             step={1000}
-
                         />
                     </Form.Item>
 
@@ -121,6 +133,24 @@ export default function ManagePrice() {
                     </Form.Item>
                 </Form>
             </Card>
+
+            <Modal
+                title="Xác nhận thay đổi giá"
+                open={isModalVisible}
+                onOk={handleConfirm}
+                onCancel={handleCancel}
+                okText="Xác nhận"
+                cancelText="Hủy"
+            >
+                <p>Bạn có chắc chắn muốn thay đổi giá với các thông tin sau:</p>
+                {newPriceValues && (
+                    <div className="mt-4">
+                        <p>Giá in ảnh thường: <strong>{formatPrice(newPriceValues.normalPerImagePrice)}</strong></p>
+                        <p>Giá in ảnh số lượng lớn: <strong>{formatPrice(newPriceValues.bulkPerImagePrice)}</strong></p>
+                        <p>Số lượng ảnh để được giá sỉ: <strong>{newPriceValues.bulkDiscountThreshold} ảnh</strong></p>
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 }

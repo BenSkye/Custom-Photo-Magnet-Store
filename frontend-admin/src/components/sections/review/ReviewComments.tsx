@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Review } from '../../../types/review';
-import { Select, Pagination, Tooltip } from 'antd';
+import { Select, Pagination, Tooltip, message } from 'antd';
 import { PaginationParams } from '../../../types/pagination';
 import { ReviewModal } from '../../modal/PopupReviewModal';
 import { UserOutlined, StarFilled } from '@ant-design/icons';
 import { calculateTimeDistance } from '../../../utils/format/formateDate';
+import { updateStatusFeedback } from '../../../services/reviewService';
+import { STATUS_CODE } from '../../../utils/constants';
+
 
 interface ReviewCommentsProps {
     reviews: Review[];
@@ -27,6 +30,26 @@ export default function ReviewComments({
         setSelectedReview(review);
         document.body.style.overflow = 'hidden';
     };
+
+    console.log(reviews);
+
+    const handleHideReview = async (id: string) => {
+        try {
+            const response = await updateStatusFeedback(id);
+            if (response.status === STATUS_CODE.UPDATE_SUCCESS) {
+                message.success('Ẩn đánh giá thành công');
+            } else {
+                console.log(response);
+                message.error('Ẩn đánh giá thất bại');
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                message.error(error.message || 'Ẩn đánh giá thất bại');
+            } else {
+                message.error('Ẩn đánh giá thất bại');
+            }
+        }
+    }
 
     const handleCloseModal = () => {
         setSelectedReview(null);
@@ -112,9 +135,15 @@ export default function ReviewComments({
                         <div className="text-xs sm:text-sm text-gray-400 italic">
                             {calculateTimeDistance(review.createdAt)}
                         </div>
-                        <div className="text-red text-end cursor-pointer">
-                            Ẩn đánh giá này
-                        </div>
+                        {review.isActive ? (
+                            <div className="text-red text-end cursor-pointer" onClick={() => handleHideReview(review._id)}>
+                                Ẩn đánh giá này
+                            </div>
+                        ) : (
+                            <div className="text-green text-end cursor-pointer" onClick={() => handleHideReview(review._id)}>
+                                Đánh giá này đã bị ẩn
+                            </div>
+                        )}
                     </div>
                 ))) : (<>Chưa có bình luận nào!</>)}
             </div>

@@ -12,16 +12,12 @@ export default function Login() {
     const onFinish = async (values: any) => {
         try {
             setLoading(true);
-            console.log('Success:', values);
-
             const data = {
                 email: values.email,
                 password: values.password,
             };
 
             const response = await login(data);
-            console.log(response);
-
             if (response.success) {
                 messageApi.open({
                     type: 'success',

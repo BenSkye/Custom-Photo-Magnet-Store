@@ -87,9 +87,9 @@ const orderSchema = new Schema<IOrder>({
         required: true
     },
     status: {
-        type: String,
-        enum: Object.values(ORDER_STATUS),
-        default: ORDER_STATUS.PENDING
+        type: Schema.Types.ObjectId ,
+        ref: COLLECTION_DOCUMENT_NAME.STATUS,
+        required: true,
     }
 }, {
     timestamps: true,

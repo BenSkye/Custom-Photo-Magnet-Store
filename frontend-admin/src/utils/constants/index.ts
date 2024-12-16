@@ -38,26 +38,10 @@ export enum SORT_ORDER {
     DESC = 'desc',
 }
 
-export const ORDER_STATUS_LABEL = {
-    pending: 'Chờ xử lý',
-    processing: 'Đang xử lý',
-    completed: 'Hoàn thành',
-    cancelled: 'Đã hủy'
-} as const;
-
-export type OrderStatus = keyof typeof ORDER_STATUS_LABEL;
-
-export const getOrderStatusLabel = (status: OrderStatus): string => {
-    return ORDER_STATUS_LABEL[status] || status;
-};
-
-// Màu sắc cho từng trạng thái
-export const ORDER_STATUS_COLORS = {
-    pending: 'gold',
-    processing: 'blue',
-    completed: 'green',
-    cancelled: 'red'
-} as const;
+export enum ORDER_STATUS_CODE {
+    DELIVERED = 'delivered',
+    FAILED = 'failed',
+}
 
 export const GOOGLE_MAP_URL = import.meta.env.VITE_GOOGLE_MAP_URL;
 

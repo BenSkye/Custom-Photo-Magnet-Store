@@ -1,8 +1,8 @@
 import orderRepo from "../repositories/order.repo";
-import { orderModel } from "../models/order.model";
 import { IOrderRequest } from '../interface/order.interface';
-import { ORDER_STATUS } from '../utils/constants';
 import priceConfigRepo from '../repositories/priceConfig.repo';
+import { BadRequestError } from '../core/error.response';
+import { statusModel } from '../models/status.model';
 
 class OrderService {
 
@@ -21,15 +21,13 @@ class OrderService {
 
             customer.phone = OrderService.validatePhoneNumber(customer.phone);
 
-            // Tính toán giá - Thêm await vì calculateOrderPrice giờ là async
             const pricing = await OrderService.calculateOrderPrice(orderItems);
 
             // Tạo đơn hàng mới
-            const newOrder = await orderModel.create({
+            const newOrder = await orderRepo.createOrder({
                 customer,
                 orderItems,
                 pricing,
-                status: ORDER_STATUS.PENDING,
             });
 
             return newOrder;
@@ -42,8 +40,71 @@ class OrderService {
         }
     }
 
-    static updateStatusOrder = async (id: string, status: string) => {
-        return await orderRepo.updateStatusOrder(id, status);
+     static updateStatusOrder = async (id: string, newStatusId: string) => {
+        try {
+            // 1. Validate inputs
+            if (!id || !newStatusId) {
+                throw new BadRequestError('Missing required parameters');
+            }
+
+            // 2. Get current order
+            const currentOrder = await orderRepo.getOrderById(id);
+            if (!currentOrder) {
+                throw new BadRequestError('Order not found');
+            }
+
+            // 3. Get status information
+            const [currentStatus, newStatus] = await Promise.all([
+                statusModel.findById(currentOrder.status),
+                statusModel.findById(newStatusId)
+            ]);
+
+            if (!currentStatus || !newStatus) {
+                throw new BadRequestError('Invalid status');
+            }
+
+            // 4. Validate final statuses
+            if (OrderService.isFinalStatus(currentStatus.code)) {
+                throw new BadRequestError(
+                    'Cannot update order status: Order is already in final status'
+                );
+            }
+
+            // 5. Allow update to failed status from any status
+            if (newStatus.code === 'failed') {
+                return await orderRepo.updateStatusOrder(id, newStatusId);
+            }
+
+            // 6. Validate status order
+            if (newStatus.order <= currentStatus.order) {
+                throw new BadRequestError(
+                    'Cannot update to previous or same status'
+                );
+            }
+
+            // 7. Validate sequential update
+            const isValidSequence = await OrderService.validateStatusSequence(
+                currentStatus.order,
+                newStatus.order
+            );
+
+            if (!isValidSequence) {
+                throw new BadRequestError(
+                    'Cannot skip intermediate statuses'
+                );
+            }
+
+            // 8. Update status
+            return await orderRepo.updateStatusOrder(id, newStatusId);
+
+        } catch (error) {
+            if (error instanceof BadRequestError) {
+                throw error;
+            }
+            throw new BadRequestError(
+                `Error updating order status: ${error instanceof Error ? error.message : 'Unknown error'}`
+            );
+        }
     }
 
     static getAllOrder = async () => {
@@ -102,6 +163,25 @@ class OrderService {
             return '0' + cleanPhone.slice(3);
         }
         return cleanPhone;
+    }
+
+    ////////////////////// function support
+    
+    private static isFinalStatus(statusCode: string): boolean {
+        return ['delivered', 'failed'].includes(statusCode);
+    }
+
+    private static async validateStatusSequence(
+        currentOrder: number,
+        newOrder: number
+    ): Promise<boolean> {
+        // Get all statuses between current and new
+        const intermediateStatuses = await statusModel.find({
+            order: { $gt: currentOrder, $lt: newOrder }
+        }).sort({ order: 1 });
+
+        // If there are intermediate statuses, the update is not sequential
+        return intermediateStatuses.length === 0;
     }
 }
 

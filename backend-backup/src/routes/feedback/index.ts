@@ -17,7 +17,7 @@ feedbackRouter.use(apiKey)
 feedbackRouter.use(permission('admin'));
 ////////////////////////////
 
-feedbackRouter.put('/status/:id', feedbackController.updateStatusFeedback)
+feedbackRouter.put('/:id', feedbackController.updateStatusFeedback)
 // feedbackRouter.delete('/:id', feedbackController.deleteFeedback)
 feedbackRouter.get('/admin', feedbackController.getAllFeedback)
 

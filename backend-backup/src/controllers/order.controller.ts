@@ -38,6 +38,14 @@ class OrderController {
             metadata: await OrderService.updateStatusOrder(req.params.id, status),
         }).send(res);
     });
+
+    getOrderByCode = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const { code } = req.params;
+        new SuccessResponse({
+            message: 'Get order by code successfully',
+            metadata: await OrderService.getOrderByCode(code),
+        }).send(res);
+    });
 }
 
 export default new OrderController();

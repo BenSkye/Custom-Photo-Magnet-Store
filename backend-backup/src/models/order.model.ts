@@ -74,6 +74,11 @@ const pricingSchema = new Schema<IPricing>({
 
 // Main Schema
 const orderSchema = new Schema<IOrder>({
+    code: {
+        type: String,
+        required: true,
+        unique: true
+    },
     customer: {
         type: customerSchema,
         required: true

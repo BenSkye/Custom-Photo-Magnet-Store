@@ -5,6 +5,11 @@ class OrderRepo {
     async getOrderById(id: string) {
         return await orderModel.findById(id);
     }
+
+    async getOrderByCode(code: string) {
+        return await orderModel.findOne({ code }).lean();
+    }
+
     async getAllOrder() {
         return await orderModel.find();
     }

@@ -38,7 +38,7 @@ export interface Pricing {
     pricePerImage: number;
 }
 export interface Order {
-    _id: string;
+    code: string;
     customer: Customer;
     orderItems: OrderItem[];
     pricing: Pricing;

@@ -55,12 +55,12 @@ export default function Orders() {
     const columns: ColumnsType<Order> = [
         {
             title: 'Mã đơn hàng',
-            dataIndex: '_id',
-            key: '_id',
+            dataIndex: 'code',
+            key: 'code',
             width: 100,
-            render: (id: string) => (
-                <a onClick={() => navigate(`/order-detail/${id}`)} className="font-mono text-blue-600">
-                    {id}
+            render: (code: string) => (
+                <a onClick={() => navigate(`/order-detail/${code}`)} className="font-mono text-blue-600">
+                    {code}
                     <ExportOutlined />
                 </a>
 

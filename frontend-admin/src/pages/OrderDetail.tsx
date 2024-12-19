@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Descriptions, Button, Select, message, Image, Divider, Modal } from 'antd';
-import { getOrderById, updateOrderStatus } from '../services/orderService';
+import { getOrderByCode, updateOrderStatus } from '../services/orderService';
 import { formatPrice } from '../utils/format/formatPrice';
-import { ORDER_STATUS_CODE, STATUS_CODE } from '../utils/constants/index';
+import { STATUS_CODE } from '../utils/constants/index';
 import { Order } from '../types/order';
 import { StatusTag } from '../components/tag/statusTag';
 import { getAllStatus } from '../services/statusOrderService';
@@ -37,22 +37,10 @@ export default function OrderDetail() {
         return statusList.find(s => s._id === selectedStatus);
     }, [selectedStatus, statusList]);
 
-    // Tính toán danh sách status được phép cập nhật
-    const availableStatuses = useMemo(() => {
-        if (!currentStatus || !statusList.length) return [];
-
-        // Nếu đơn hàng đã ở trạng thái cuối
-        if (currentStatus.code === 'delivered' || currentStatus.code === 'failed') {
-            return [];
-        }
-
-        return statusList.filter(status => {
-            // Luôn cho phép cập nhật sang trạng thái failed
-            if (status.code === 'failed') return true;
-
-            // Chỉ cho phép cập nhật sang trạng thái có order cao hơn và liền kề
-            return status.order === currentStatus.order + 1;
-        });
+    // status được phép cập nhật
+    const nextStatus = useMemo(() => {
+        if (!currentStatus || !statusList.length) return null;
+        return statusList.find(status => status.order === currentStatus.order + 1);
     }, [currentStatus, statusList]);
 
     const fetchStatusList = async () => {
@@ -72,7 +60,7 @@ export default function OrderDetail() {
         if (!id) return;
         setLoading(true);
         try {
-            const response = await getOrderById(id);
+            const response = await getOrderByCode(id);
             setOrder(response.metadata);
         } catch (error) {
             if (error instanceof Error) {
@@ -87,20 +75,7 @@ export default function OrderDetail() {
 
     const handleConfirm = async () => {
         if (!id) return message.error('Không tìm thấy đơn hàng');
-        if (!currentStatus || !selectedStatusInfo) return message.error('Trạng thái không hợp lệ');
-
-        // Validate trạng thái cuối
-        if (currentStatus.code === 'delivered' || currentStatus.code === 'failed') {
-            message.error('Không thể cập nhật đơn hàng đã hoàn thành hoặc thất bại');
-            return;
-        }
-
-        // Validate thứ tự trạng thái
-        if (selectedStatusInfo.code !== 'failed' &&
-            selectedStatusInfo.order !== currentStatus.order + 1) {
-            message.error('Không thể bỏ qua các bước trung gian');
-            return;
-        }
+        if (!selectedStatus) return message.error('Vui lòng chọn trạng thái');
 
         try {
             const response = await updateOrderStatus(id, selectedStatus);
@@ -112,16 +87,11 @@ export default function OrderDetail() {
             }
         } catch (error) {
             if (error instanceof Error) {
-                message.error(error.message || 'Không thể cập nhật trạng thái');
+                message.error('Không thể cập nhật trạng thái: ' + error.message);
             } else {
                 message.error('Không thể cập nhật trạng thái');
             }
         }
-    };
-
-    const showConfirmModal = (newStatus: string) => {
-        setSelectedStatus(newStatus);
-        setIsModalVisible(true);
     };
 
     const handleCancel = () => {
@@ -139,36 +109,45 @@ export default function OrderDetail() {
 
             <Card loading={loading}>
                 <Descriptions title="Thông tin đơn hàng" bordered>
-                    <Descriptions.Item label="Mã đơn hàng">{order._id}</Descriptions.Item>
+                    <Descriptions.Item label="Mã đơn hàng">{order.code}</Descriptions.Item>
                     <Descriptions.Item label="Trạng thái">
                         {currentStatus && (
                             <StatusTag status={currentStatus} />
                         )}
                     </Descriptions.Item>
+
                     <Descriptions.Item label="Cập nhật trạng thái">
-                        {currentStatus?.code === ORDER_STATUS_CODE.DELIVERED || currentStatus?.code === ORDER_STATUS_CODE.FAILED ? (
-                            <span className="text-gray-500 italic">
-                                Đơn hàng đã {currentStatus.code === 'delivered' ? 'hoàn thành' : 'thất bại'}
-                            </span>
-                        ) : (
-                            <Select
-                                value={order.status as string}
-                                onChange={showConfirmModal}
-                                style={{ width: 200 }}
-                                placeholder="Chọn trạng thái mới"
-                            >
-                                {availableStatuses.map((status) => (
-                                    <Select.Option
-                                        key={status._id}
-                                        value={status._id}
-                                        disabled={status._id === order.status}
-                                    >
-                                        {status.name}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        )}
+                        <Select
+                            value={selectedStatus}
+                            onChange={(value) => {
+                                setSelectedStatus(value);
+                                setIsModalVisible(true);
+                            }}
+                            style={{ width: 200 }}
+                            placeholder="Chọn trạng thái mới"
+                            onSelect={(value) => {
+                                // Luôn show modal khi có selection, kể cả khi chọn giá trị giống hiện tại
+                                setSelectedStatus(value);
+                                setIsModalVisible(true);
+                            }}
+                            onDropdownVisibleChange={(open) => {
+                                // Chỉ pre-select khi mở dropdown và chưa có selectedStatus
+                                if (open && nextStatus && !selectedStatus) {
+                                    setSelectedStatus(nextStatus._id || '');
+                                }
+                            }}
+                        >
+                            {statusList.map((status) => (
+                                <Select.Option
+                                    key={status._id}
+                                    value={status._id}
+                                >
+                                    {status.name}
+                                </Select.Option>
+                            ))}
+                        </Select>
                     </Descriptions.Item>
+
                     <Descriptions.Item label="Khách hàng" span={3}>
                         <div>{order.customer.fullName}</div>
                         <div>{order.customer.phone}</div>
@@ -232,11 +211,6 @@ export default function OrderDetail() {
                 <p className="font-bold">
                     {currentStatus?.name} → {selectedStatusInfo?.name}
                 </p>
-                {selectedStatusInfo?.code === 'failed' && (
-                    <p className="text-red-500 mt-2">
-                        Lưu ý: Đơn hàng sẽ không thể thay đổi trạng thái sau khi chuyển sang thất bại!
-                    </p>
-                )}
             </Modal>
         </div>
     );

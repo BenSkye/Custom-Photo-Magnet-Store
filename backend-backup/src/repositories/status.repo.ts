@@ -10,6 +10,10 @@ class StatusRepo {
         return await statusModel.find({ isActive: true }).sort({ order: 1 });
     }
 
+    async getById(id: string) {
+        return await statusModel.findById(id);
+    }
+
     async getByCode(code: string) {
         return await statusModel.findOne({ code, isActive: true });
     }

@@ -4,6 +4,7 @@ import { IPricing } from './pricing.interface';
 import { IOrderStatus } from './status.interface';
 
 export interface IOrder extends Document {
+    code: string;
     customer: ICustomer;
     orderItems: IOrderItem[];
     pricing: IPricing;

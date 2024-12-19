@@ -5,6 +5,11 @@ class OrderRepo {
     async getOrderById(id: string) {
         return await orderModel.findById(id);
     }
+
+    async getOrderByCode(code: string) {
+        return await orderModel.findOne({ code }).lean();
+    }
+
     async getAllOrder() {
         return await orderModel.find();
     }
@@ -14,8 +19,8 @@ class OrderRepo {
         return await orderModel.create({ ...data, status: status?._id });
     }
 
-    async updateStatusOrder(id: string, status: string) {
-        return await orderModel.findByIdAndUpdate(id, { status }, { new: true });
+    async updateStatusOrder(code: string, status: string) {
+        return await orderModel.findOneAndUpdate({ code }, { status }, { new: true });
     }
 }
 

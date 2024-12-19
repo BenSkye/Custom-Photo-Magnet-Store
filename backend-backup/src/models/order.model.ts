@@ -6,7 +6,6 @@ import { IOrderItem } from '../interface/orderItem.interface';
 import { IPricing } from '../interface/pricing.interface';
 import { IOrder } from '../interface/order.interface';
 
-// Schemas
 const addressSchema = new Schema<IAddress>({
     district: {
         type: String,
@@ -74,6 +73,11 @@ const pricingSchema = new Schema<IPricing>({
 
 // Main Schema
 const orderSchema = new Schema<IOrder>({
+    code: {
+        type: String,
+        required: true,
+        unique: true
+    },
     customer: {
         type: customerSchema,
         required: true

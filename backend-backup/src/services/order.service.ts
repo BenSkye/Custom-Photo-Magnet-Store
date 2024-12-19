@@ -48,15 +48,15 @@ class OrderService {
         }
     }
 
-    static updateStatusOrder = async (id: string, newStatusId: string) => {
+    static updateStatusOrder = async (code: string, newStatusId: string) => {
         try {
             // 1. Validate inputs
-            if (!id || !newStatusId) {
+            if (!code || !newStatusId) {
                 throw new BadRequestError('Missing required parameters');
             }
 
             // 2. Get current order
-            const currentOrder = await orderRepo.getOrderById(id);
+            const currentOrder = await orderRepo.getOrderByCode(code);
             if (!currentOrder) {
                 throw new BadRequestError('Order not found');
             }
@@ -68,7 +68,7 @@ class OrderService {
             }
 
             // 4. Update status
-            return await orderRepo.updateStatusOrder(id, newStatusId);
+            return await orderRepo.updateStatusOrder(code, newStatusId);
 
         } catch (error) {
             if (error instanceof BadRequestError) {

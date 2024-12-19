@@ -6,7 +6,6 @@ import { IOrderItem } from '../interface/orderItem.interface';
 import { IPricing } from '../interface/pricing.interface';
 import { IOrder } from '../interface/order.interface';
 
-// Schemas
 const addressSchema = new Schema<IAddress>({
     district: {
         type: String,

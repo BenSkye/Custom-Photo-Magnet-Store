@@ -35,7 +35,7 @@ class OrderController {
         const { status } = req.body;
         new SuccessResponse({
             message: 'Update status order successfully',
-            metadata: await OrderService.updateStatusOrder(req.params.id, status),
+            metadata: await OrderService.updateStatusOrder(req.params.code, status),
         }).send(res);
     });
 

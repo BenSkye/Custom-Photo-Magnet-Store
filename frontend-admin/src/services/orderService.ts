@@ -31,6 +31,16 @@ export const getOrderById = async (orderId: string) => {
     }
 }
 
+export const getOrderByCode = async (code: string) => {
+    try {
+        const response = await apiClient.get(`/v1/api/order/code/${code}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error getting order by code:', error);
+        throw error;
+    }
+}
+
 export const updateOrderStatus = async (orderId: string, status: string) => {
     try {
         const response = await apiClient.put(`/v1/api/order/${orderId}`, { status });

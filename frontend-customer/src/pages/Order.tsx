@@ -83,12 +83,11 @@ export default function Order() {
     const handleConfirmOrder = async (success: boolean) => {
         if (success) {
             setOrderStatus('success');
-            next();
         } else {
             setOrderStatus('failure');
-            next();
         }
     };
+
 
     const steps = [
         {
@@ -108,20 +107,25 @@ export default function Order() {
                 onSubmit={handleSubmit} />
         },
         {
-            title: 'Hoàn Tất',
-            content: <CompletionStep
-                orderInfo={orderInfo}
-                totalImages={calculateTotalImages()}
-                totalPrice={calculateTotalPrice()}
-                onPrev={prev}
-                onConfirm={handleConfirmOrder}
-            />
-        }
-        , {
-            title: orderStatus === 'success' ? 'Thành công' : 'Thất bại',
-            content: orderStatus === 'success' ?
-                <ThankYouStep /> :
-                <FailureStep onRetry={() => setCurrent(2)} /> // Quay lại bước Hoàn tất
+
+            title: orderStatus === 'success'
+                ? 'Thành công'
+                : orderStatus === 'failure'
+                    ? 'Thất bại'
+                    : 'Hoàn tất',
+            content: orderStatus === 'success' ? (
+                <ThankYouStep />
+            ) : orderStatus === 'failure' ? (
+                <FailureStep onRetry={() => setOrderStatus(null)} />
+            ) : (
+                <CompletionStep
+                    orderInfo={orderInfo}
+                    totalImages={calculateTotalImages()}
+                    totalPrice={calculateTotalPrice()}
+                    onPrev={prev}
+                    onConfirm={handleConfirmOrder}
+                />
+            )
         }
     ];
 

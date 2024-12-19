@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Descriptions, Button, Select, message, Image, Divider, Modal } from 'antd';
-import { getOrderById, updateOrderStatus } from '../services/orderService';
+import { getOrderByCode, updateOrderStatus } from '../services/orderService';
 import { formatPrice } from '../utils/format/formatPrice';
 import { STATUS_CODE } from '../utils/constants/index';
 import { Order } from '../types/order';
@@ -60,7 +60,7 @@ export default function OrderDetail() {
         if (!id) return;
         setLoading(true);
         try {
-            const response = await getOrderById(id);
+            const response = await getOrderByCode(id);
             setOrder(response.metadata);
         } catch (error) {
             if (error instanceof Error) {

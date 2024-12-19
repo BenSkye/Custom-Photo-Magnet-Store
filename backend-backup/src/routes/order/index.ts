@@ -16,8 +16,8 @@ orderRouter.use(permission('admin'));
 ////////////////////////////
 
 orderRouter.get('/:id', orderController.getOrderById);
-orderRouter.put('/:id', orderController.updateStatusOrder);
-orderRouter.get('/:code', orderController.getOrderByCode);
+orderRouter.put('/:code', orderController.updateStatusOrder);
+orderRouter.get('/code/:code', orderController.getOrderByCode);
 orderRouter.get('/', orderController.getAllOrder);
 
 export default orderRouter;

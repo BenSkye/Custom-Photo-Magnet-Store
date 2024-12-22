@@ -22,29 +22,12 @@ import statusRouter from './status';
 
 const router = Router();
 
-//check apiKey
-// router.use(apiKey)
-//check permission
-// router.use(permission('customer'))
 
 router.use('/v1/api/order', orderRouter);
 router.use('/v1/api/feedback', feedbackRouter);
 router.use('/v1/api/config-price', priceConfigRouter);
 router.use('/v1/api/status', statusRouter);
 router.use('/v1/api/user', accessRouter);
-// router.use('/v1/api/checkout', checkoutRouter);
-// router.use('/v1/api/payos', payosRouter);
-// router.use('/v1/api/category', categoryRouter);
-// router.use('/v1/api/company', companyRouter);
-// router.use('/v1/api/level', levelRouter);
-// router.use('/v1/api/job', jobRouter);
-// router.use('/v1/api/template', templateRouter);
-// router.use('/v1/api/cv', cvRouter);
-// router.use('/v1/api/application', applicationRouter);
-// router.use('/v1/api/subscription', subscriptionRouter);
-// router.use('/v1/api/user-stats', userRouter);
-// router.use('/v1/api/payment', paymentRouter);
-// router.use('/v1/api/notification', notificationRouter);
 
 router.use('/', (req: Request, res: Response) => {
     res.send('AnhNamCham API');

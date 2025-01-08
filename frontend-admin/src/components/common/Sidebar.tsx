@@ -1,10 +1,10 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import {
-    DashboardOutlined,
     ShoppingOutlined,
     CommentOutlined,
     DollarOutlined,
+    HomeOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -16,10 +16,15 @@ interface SidebarProps {
 }
 
 const menuItems = [
+    // {
+    //     key: '/dashboard',
+    //     icon: <DashboardOutlined />,
+    //     label: 'Dashboard',
+    // },
     {
-        key: '/dashboard',
-        icon: <DashboardOutlined />,
-        label: 'Dashboard',
+        key: '/home',
+        icon: <HomeOutlined />,
+        label: 'Trang chủ',
     },
     {
         key: '/manage-price',
@@ -31,6 +36,7 @@ const menuItems = [
         icon: <ShoppingOutlined />,
         label: 'Quản lý đơn hàng',
     },
+
     {
         key: '/reviews',
         icon: <CommentOutlined />,

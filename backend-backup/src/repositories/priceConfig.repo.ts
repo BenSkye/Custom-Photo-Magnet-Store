@@ -23,7 +23,6 @@ class PriceConfigRepo {
         return await priceConfigModel.findByIdAndUpdate(id, data, { new: true });
     }
 
-    
 }
 
 export default new PriceConfigRepo();

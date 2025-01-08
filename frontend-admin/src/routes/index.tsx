@@ -8,6 +8,7 @@ import Login from '../pages/Login';
 import ProtectedRoute from './ProtectedRoutes';
 import { Navigate } from 'react-router-dom';
 import OrderDetail from '../pages/OrderDetail';
+import Home from '../pages/Home';
 
 export const publicRoutes: AppRoute[] = [
   {
@@ -54,6 +55,12 @@ export const privateRoutes: AppRoute[] = [
     key: 'order-detail',
     label: 'Chi tiết đơn hàng',
     element: <OrderDetail />,
+  },
+  {
+    path: '/home',
+    key: 'home',
+    label: 'Trang chủ',
+    element: <Home />,
   },
 ];
 

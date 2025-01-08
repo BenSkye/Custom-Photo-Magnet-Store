@@ -4,6 +4,8 @@ export const COLLECTION_NAME_CONST = {
     FEEDBACK: 'Feedbacks',
     PRICE_CONFIG: 'PriceConfigs',
     STATUS: 'StatusOrders',
+    HERO_SECTION: 'HeroSections',
+    PRODUCT_CARD: 'ProductCards',
 }
 
 export const COLLECTION_DOCUMENT_NAME = {
@@ -11,6 +13,8 @@ export const COLLECTION_DOCUMENT_NAME = {
     FEEDBACK: 'Feedback',
     PRICE_CONFIG: 'PriceConfig',
     STATUS: 'StatusOrder',
+    HERO_SECTION: 'HeroSection',
+    PRODUCT_CARD: 'ProductCard',
 }
 
 export const ORDER_STATUS = {

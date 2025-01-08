@@ -1,8 +1,9 @@
-export const FIREBASE_STORAGE_URL = '';
+// export const FIREBASE_STORAGE_URL = '';
 export const FIREBASE_STORAGE_PATH = {
     ORDERS_IMG: 'orders',
     PRODUCTS_IMG: 'products',
     FEEDBACKS_IMG: 'feedbacks',
+    HERO_SECTION_IMG: 'hero-section',
 };
 
 export const PROVINCE_ID = {

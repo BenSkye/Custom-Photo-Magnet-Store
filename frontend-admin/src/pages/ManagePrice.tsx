@@ -53,7 +53,9 @@ export default function ManagePrice() {
             const response = await updatePriceConfig(prices._id, newPriceValues);
             if (response.status === STATUS_CODE.UPDATE_SUCCESS) {
                 message.success('Cập nhật giá thành công');
-                setPrices(newPriceValues);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
             } else {
                 message.error('Có lỗi xảy ra khi cập nhật giá');
             }

@@ -18,19 +18,23 @@ import orderRouter from './order';
 import feedbackRouter from './feedback';
 import priceConfigRouter from './configPrice';
 import statusRouter from './status';
+import heroSectionRouter from './heroSection';
+import productCardRouter from './productCard';
 
 
 const router = Router();
 
-
+router.use('/v1/api/user', accessRouter);
 router.use('/v1/api/order', orderRouter);
 router.use('/v1/api/feedback', feedbackRouter);
 router.use('/v1/api/config-price', priceConfigRouter);
 router.use('/v1/api/status', statusRouter);
-router.use('/v1/api/user', accessRouter);
+router.use('/v1/api/heroSection', heroSectionRouter);
+router.use('/v1/api/product-card', productCardRouter);
+
 
 router.use('/', (req: Request, res: Response) => {
-    res.send('AnhNamCham API');
+    res.send('MEMORY_Anhnamcham API');
 });
 
 export default router;

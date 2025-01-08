@@ -1,26 +1,50 @@
-import { IProductCardProps } from '../../types/productCardProps';
-import { Card } from 'antd';
-import { Button } from '../button/Button';
-import {
-    DollarOutlined,
-    InfoCircleOutlined,
-    ShoppingCartOutlined
-} from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { formatPrice } from '../../utils/format/formatPrice';
+import { useEffect } from 'react';
+import { Card, Form, Input, InputNumber } from 'antd';
+import { IProductCard } from '../../types/productCard';
 
-export const ProductCard: React.FC<IProductCardProps> = ({
-    image,
+interface ProductCardProps extends IProductCard {
+    isEditing: boolean;
+    onUpdate: (id: string, data: IProductCard) => Promise<void>;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({
+    _id,
+    imageUrl,
     title,
     description,
     price,
-    priceUnit,
+    isEditing,
+    onUpdate
 }) => {
-    return (
-        <Card className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-[680px] flex flex-col justify-between ">
+    const [form] = Form.useForm();
+
+    useEffect(() => {
+        if (isEditing) {
+            form.setFieldsValue({
+                title,
+                description,
+                price,
+            });
+        }
+    }, [isEditing, form, title, description, price]);
+
+    const handleFinish = async (values: any) => {
+        if (!_id) {
+            console.error('Product ID is missing!');
+            return;
+        };
+        await onUpdate(_id, {
+            _id,
+            imageUrl,
+            ...values
+        });
+    };
+
+    const ViewMode = () => (
+        <Card className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-[680px] flex flex-col justify-between">
             <div>
                 <img
-                    src={image}
+                    src={imageUrl}
                     alt={title}
                     className="rounded-lg w-full h-[180px] object-cover mb-3"
                 />
@@ -31,32 +55,60 @@ export const ProductCard: React.FC<IProductCardProps> = ({
             </div>
             <div>
                 <div className="mb-4 flex items-center">
-                    <DollarOutlined className="text-red mr-2 text-xl" />
                     <span className="text-sm text-gray-600">Giá: </span>
-                    <span className="text-2xl font-bold text-red ml-1">{formatPrice(price)}</span>
-                    <span className="text-sm text-gray-600">/{priceUnit}</span>
-                </div>
-                <div className="flex lg:flex-row gap-2 flex-col">
-                    <Link to="/information">
-                        <Button
-                            variant='secondary'
-                            className="w-full text-[13px] sm:text-sm py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-2 min-h-[40px]"
-                        >
-                            <InfoCircleOutlined className="text-lg" />
-                            <span className="whitespace-nowrap">XEM THÊM THÔNG TIN</span>
-                        </Button>
-                    </Link>
-                    <Link to="/order">
-                        <Button
-                            variant='primary'
-                            className="w-full text-[13px] sm:text-sm py-2 px-2 sm:px-4 flex items-center justify-center gap-1 sm:gap-2 min-h-[40px]"
-                        >
-                            <ShoppingCartOutlined className="text-lg" />
-                            <span className="whitespace-nowrap">ĐẶT NGAY</span>
-                        </Button>
-                    </Link>
+                    <span className="text-2xl font-bold text-red ml-1">
+                        {price} đ
+                    </span>
                 </div>
             </div>
         </Card>
     );
+
+    const EditMode = () => (
+        <Card className="bg-white p-6 rounded-lg shadow-lg border-2 border-blue-500">
+            <Form
+                form={form}
+                layout="vertical"
+                onFinish={handleFinish}
+            >
+                <div className="mb-4">
+                    <img
+                        src={imageUrl}
+                        alt={title}
+                        className="rounded-lg w-full h-[180px] object-cover"
+                    />
+                </div>
+
+                <Form.Item
+                    name="title"
+                    label="Tiêu đề"
+                    rules={[{ required: true, message: 'Vui lòng nhập tiêu đề!' }]}
+                >
+                    <Input placeholder="Nhập tiêu đề" />
+                </Form.Item>
+
+                <Form.Item
+                    name="description"
+                    label="Mô tả"
+                    rules={[{ required: true, message: 'Vui lòng nhập mô tả!' }]}
+                >
+                    <Input.TextArea rows={3} placeholder="Nhập mô tả" />
+                </Form.Item>
+
+                <Form.Item
+                    name="price"
+                    label="Giá"
+                    rules={[{ required: true, message: 'Vui lòng nhập giá!' }]}
+                >
+                    <InputNumber
+                        className="w-full"
+                        formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        parser={value => value!.replace(/\$\s?|(,*)/g, '')}
+                    />
+                </Form.Item>
+            </Form>
+        </Card>
+    );
+
+    return isEditing ? <EditMode /> : <ViewMode />;
 };

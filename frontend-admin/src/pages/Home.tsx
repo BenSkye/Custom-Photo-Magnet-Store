@@ -25,6 +25,7 @@ export default function Home() {
     const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [updatedProducts, setUpdatedProducts] = useState<Map<string, any>>(new Map());
     const indexedDBService = new IndexedDBService();
 
     useEffect(() => {
@@ -70,11 +71,16 @@ export default function Home() {
         }
     };
 
+    const handleProductFormChange = (id: string, values: any) => {
+        setUpdatedProducts(prev => new Map(prev).set(id, {
+            ...values,
+            _id: id,
+        }));
+    };
+
     const handleUpdateProduct = async (id: string, updatedData: IProductCard) => {
         try {
             setLoading(true);
-            console.log('Updating product with ID:', id); // Kiểm tra ID
-            console.log('Updated data:', updatedData); // Kiểm tra dữ liệu
             await updateProductCard(id, updatedData);
             await fetchProducts();
             message.success('Cập nhật sản phẩm thành công!');
@@ -90,11 +96,26 @@ export default function Home() {
         setIsEditing(true);
     };
 
+    const handleProductImageUpload = async (file: File) => {
+        try {
+            const path = `${FIREBASE_STORAGE_PATH}/products/${file.name}-${Date.now()}`;
+            const url = await uploadImages(file, path);
+            return url;
+        } catch (error) {
+            console.error('Error uploading product image:', error);
+            message.error('Không thể tải lên ảnh sản phẩm');
+            throw error;
+        }
+    };
+
+
     const handleSave = async () => {
         try {
             setLoading(true);
+            // Validate và cập nhật hero section
             const values = await form.validateFields();
 
+            // Xử lý hero section như cũ
             const uploadPromises = fileList.map(async (file) => {
                 if (file.originFileObj) {
                     const path = `${FIREBASE_STORAGE_PATH}/${file.uid}-${file.name}`;
@@ -116,24 +137,26 @@ export default function Home() {
                 images: uploadedImages
             };
 
+            // Cập nhật hero section
             await updateHeroSection(updatedHeroSection);
             setHeroSection(updatedHeroSection);
 
-            // Cập nhật tất cả sản phẩm
-            await Promise.all(products.map(product => {
-                const updatedData = {
-                    _id: product._id,
-                    imageUrl: product.imageUrl,
-                    title: product.title,
-                    description: product.description,
-                    price: product.price,
-                };
-                console.log('====================================');
-                console.log('Updating product:', updatedData);
-                console.log('====================================');
-                return handleUpdateProduct(product._id, updatedData);
-            }));
+            // Cập nhật các sản phẩm đã thay đổi - Sửa phần này
+            const updatePromises = Array.from(updatedProducts.entries()).map(([id, values]) => {
+                const product = products.find(p => p._id === id);
+                if (product) {
+                    return handleUpdateProduct(id, {
+                        _id: id,
+                        ...values, // Sử dụng tất cả các giá trị từ form, bao gồm cả imageUrl mới
+                    });
+                }
+                return Promise.resolve();
+            });
 
+            await Promise.all(updatePromises);
+
+            // Reset states
+            setUpdatedProducts(new Map());
             setIsEditing(false);
             await indexedDBService.clearIndexedDB();
             message.success('Lưu thành công!');
@@ -156,6 +179,8 @@ export default function Home() {
                 url: img.imageUrl,
             })));
             setIsEditing(false);
+            setUpdatedProducts(new Map()); // Reset các thay đổi của sản phẩm
+            await fetchProducts(); // Tải lại danh sách sản phẩm
         } catch (error) {
             console.error('Error canceling:', error);
             message.error('Có lỗi xảy ra');
@@ -225,6 +250,8 @@ export default function Home() {
                         {...product}
                         isEditing={isEditing}
                         onUpdate={handleUpdateProduct}
+                        onFormChange={handleProductFormChange}
+                        onImageUpload={handleProductImageUpload}
                     />
                 ))}
             </div>

@@ -3,6 +3,7 @@ import { Card, Form, Input, InputNumber } from 'antd';
 import { IProductCard } from '../../types/productCard';
 import { Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { formatPrice } from '../../utils/format/formatPrice';
 
 interface ProductCardProps extends IProductCard {
     isEditing: boolean;
@@ -27,7 +28,7 @@ const ViewMode = memo(({ imageUrl, title, description, price }: IProductCard) =>
             <div className="mb-4 flex items-center">
                 <span className="text-sm text-gray-600">Giá: </span>
                 <span className="text-2xl font-bold text-red ml-1">
-                    {price.toLocaleString('vi-VN')} đ
+                    {formatPrice(price)}
                 </span>
             </div>
         </div>
@@ -92,74 +93,102 @@ const EditMode = memo(({
     };
 
     return (
-        <Card className="bg-white p-6 rounded-lg shadow-lg border-2 border-blue-500">
+        <Card className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
             <Form
                 form={form}
                 layout="vertical"
                 onValuesChange={handleValuesChange}
                 onFinish={handleFinish}
                 initialValues={initialValues}
+                className="space-y-4"
             >
                 <Form.Item name="imageUrl" hidden>
                     <Input />
                 </Form.Item>
 
-                <div className="mb-4">
+                {/* Image Upload Section */}
+                <div className="relative mb-6 group">
                     <Upload
                         name="productImage"
                         listType="picture-card"
-                        className="avatar-uploader"
+                        className="w-full"
                         showUploadList={false}
                         beforeUpload={() => false}
                         onChange={handleImageChange}
                     >
-                        {previewImage ? (
-                            <div className="relative group">
-                                <img
-                                    src={previewImage}
-                                    alt="product"
-                                    className="w-full h-[180px] object-cover rounded-lg"
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center rounded-lg">
-                                    <PlusOutlined className="text-white text-2xl" />
+                        <div className="w-full aspect-[16/9] overflow-hidden rounded-lg">
+                            {previewImage ? (
+                                <div className="relative w-full h-full">
+                                    <img
+                                        src={previewImage}
+                                        alt="product"
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                                        <div className="text-white text-center">
+                                            <PlusOutlined className="text-2xl mb-2" />
+                                            <p className="text-sm">Thay đổi ảnh</p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        ) : (
-                            <div>
-                                {imageLoading ? 'Uploading...' : 'Upload'}
-                            </div>
-                        )}
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-lg">
+                                    {imageLoading ? (
+                                        <div className="text-center">
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+                                            <p className="text-gray-600">Đang tải...</p>
+                                        </div>
+                                    ) : (
+                                        <div className="text-center text-gray-500">
+                                            <PlusOutlined className="text-2xl mb-2" />
+                                            <p>Tải ảnh lên</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </Upload>
                 </div>
 
-                <Form.Item
-                    name="title"
-                    label="Tiêu đề"
-                    rules={[{ required: true, message: 'Vui lòng nhập tiêu đề!' }]}
-                >
-                    <Input placeholder="Nhập tiêu đề" />
-                </Form.Item>
+                {/* Form Fields */}
+                <div className="space-y-4">
+                    <Form.Item
+                        name="title"
+                        label="Tiêu đề"
+                        rules={[{ required: true, message: 'Vui lòng nhập tiêu đề!' }]}
+                    >
+                        <Input
+                            placeholder="Nhập tiêu đề"
+                            className="rounded-md"
+                        />
+                    </Form.Item>
 
-                <Form.Item
-                    name="description"
-                    label="Mô tả"
-                    rules={[{ required: true, message: 'Vui lòng nhập mô tả!' }]}
-                >
-                    <Input.TextArea rows={3} placeholder="Nhập mô tả" />
-                </Form.Item>
+                    <Form.Item
+                        name="description"
+                        label="Mô tả"
+                        rules={[{ required: true, message: 'Vui lòng nhập mô tả!' }]}
+                    >
+                        <Input.TextArea
+                            rows={3}
+                            placeholder="Nhập mô tả"
+                            className="rounded-md"
+                        />
+                    </Form.Item>
 
-                <Form.Item
-                    name="price"
-                    label="Giá"
-                    rules={[{ required: true, message: 'Vui lòng nhập giá!' }]}
-                >
-                    <InputNumber
-                        className="w-full"
-                        formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        min={0}
-                        step={1000}
-                    />
-                </Form.Item>
+                    <Form.Item
+                        name="price"
+                        label="Giá"
+                        rules={[{ required: true, message: 'Vui lòng nhập giá!' }]}
+                    >
+                        <InputNumber
+                            className="w-full rounded-md"
+                            formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            min={0}
+                            step={1000}
+                            addonAfter="đ"
+                        />
+                    </Form.Item>
+                </div>
             </Form>
         </Card>
     );

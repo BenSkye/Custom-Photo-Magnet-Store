@@ -115,7 +115,6 @@ export default function Home() {
             // Validate và cập nhật hero section
             const values = await form.validateFields();
 
-            // Xử lý hero section như cũ
             const uploadPromises = fileList.map(async (file) => {
                 if (file.originFileObj) {
                     const path = `${FIREBASE_STORAGE_PATH}/${file.uid}-${file.name}`;
@@ -147,7 +146,7 @@ export default function Home() {
                 if (product) {
                     return handleUpdateProduct(id, {
                         _id: id,
-                        ...values, // Sử dụng tất cả các giá trị từ form, bao gồm cả imageUrl mới
+                        ...values,
                     });
                 }
                 return Promise.resolve();
@@ -199,37 +198,8 @@ export default function Home() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 bg-silver">
             <div>
-                <div className="top-0 right-0 flex gap-4 mb-4">
-                    <Button
-                        onClick={isEditing ? handleSave : handleEdit}
-                        className="bg-blue-500 hover:bg-blue-600 text-white"
-                        disabled={loading}
-                    >
-                        {isEditing ? (
-                            <>
-                                <SaveOutlined className="mr-2" />
-                                {loading ? 'Đang lưu...' : 'Lưu thay đổi'}
-                            </>
-                        ) : (
-                            <>
-                                <EditOutlined className="mr-2" />
-                                Chỉnh sửa
-                            </>
-                        )}
-                    </Button>
-                    {isEditing && (
-                        <Button
-                            onClick={handleCancel}
-                            className="bg-gray-500 hover:bg-gray-600 text-white"
-                            disabled={loading}
-                        >
-                            Hủy
-                        </Button>
-                    )}
-                </div>
-
                 <AnimateWrapper variant="slideRight" delay={0.2}>
                     <HeroSection
                         heroSection={heroSection}
@@ -254,6 +224,34 @@ export default function Home() {
                         onImageUpload={handleProductImageUpload}
                     />
                 ))}
+            </div>
+            <div className="mt-4 flex gap-4 mb-4">
+                <Button
+                    onClick={isEditing ? handleSave : handleEdit}
+                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                    disabled={loading}
+                >
+                    {isEditing ? (
+                        <>
+                            <SaveOutlined className="mr-2" />
+                            {loading ? 'Đang lưu...' : 'Lưu thay đổi'}
+                        </>
+                    ) : (
+                        <>
+                            <EditOutlined className="mr-2" />
+                            Chỉnh sửa
+                        </>
+                    )}
+                </Button>
+                {isEditing && (
+                    <Button
+                        onClick={handleCancel}
+                        className="bg-gray-500 hover:bg-gray-600 text-white"
+                        disabled={loading}
+                    >
+                        Hủy
+                    </Button>
+                )}
             </div>
         </div>
     );

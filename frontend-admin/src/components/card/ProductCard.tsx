@@ -178,7 +178,26 @@ const EditMode = memo(({
                     <Form.Item
                         name="price"
                         label="Giá"
-                        rules={[{ required: true, message: 'Vui lòng nhập giá!' }]}
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập giá!' },
+                            {
+                                type: 'number',
+                                message: 'Giá phải là số!',
+                            },
+                            {
+                                validator: async (_, value) => {
+                                    if (value < 0) {
+                                        throw new Error('Giá không được âm!');
+                                    }
+                                    if (!Number.isInteger(value)) {
+                                        throw new Error('Giá phải là số nguyên!');
+                                    }
+                                    if (value > 1000000000) { // 1 tỷ
+                                        throw new Error('Giá không được vượt quá 1 tỷ đồng!');
+                                    }
+                                },
+                            },
+                        ]}
                     >
                         <InputNumber
                             className="w-full rounded-md"
@@ -186,6 +205,11 @@ const EditMode = memo(({
                             min={0}
                             step={1000}
                             addonAfter="đ"
+                            onKeyPress={(event) => {
+                                if (!/[0-9]/.test(event.key)) {
+                                    event.preventDefault();
+                                }
+                            }}
                         />
                     </Form.Item>
                 </div>

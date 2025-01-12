@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { message, Form, UploadFile, Divider } from 'antd';
+import { message, Form, UploadFile, Divider, Skeleton } from 'antd';
 import { HeroSection } from '../components/sections/home/HeroSection';
 import { getHeroSection, updateHeroSection } from '../services/heroSectionService';
 import { uploadImages } from '../services/uploadService';
@@ -12,6 +12,7 @@ import { FIREBASE_STORAGE_PATH } from '../utils/constants';
 import { getAllProductCards, updateProductCard } from '../services/productCardService';
 import { IProductCard } from '../types/productCard';
 import { ProductCard } from '../components/card/ProductCard';
+import { ProductCardSkeleton } from '../components/skeleton/ProductCardSkeleton';
 
 export default function Home() {
     const [form] = Form.useForm();
@@ -38,7 +39,7 @@ export default function Home() {
             form.setFieldsValue(heroSection);
             setFileList(heroSection.images.map((img: IHeroImage, index: number) => ({
                 uid: `-${index}`,
-                name: `image-${index}`,
+                name: `${FIREBASE_STORAGE_PATH.HERO_SECTION_IMG}-${index}`,
                 status: 'done',
                 url: img.imageUrl,
             })));
@@ -98,7 +99,7 @@ export default function Home() {
 
     const handleProductImageUpload = async (file: File) => {
         try {
-            const path = `${FIREBASE_STORAGE_PATH}/products/${file.name}-${Date.now()}`;
+            const path = `${FIREBASE_STORAGE_PATH.PRODUCTS_IMG}/products/${file.name}-${Date.now()}`;
             const url = await uploadImages(file, path);
             return url;
         } catch (error) {
@@ -201,30 +202,42 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8 bg-silver">
             <div>
                 <AnimateWrapper variant="slideRight" delay={0.2}>
-                    <HeroSection
-                        heroSection={heroSection}
-                        isEditing={isEditing}
-                        fileList={fileList}
-                        onFileListChange={setFileList}
-                        form={form}
-                        onDeleteImage={handleDeleteImage}
-                    />
+                    {loading ? (
+                        <Skeleton />
+                    ) : (
+                        <HeroSection
+                            heroSection={heroSection}
+                            isEditing={isEditing}
+                            fileList={fileList}
+                            onFileListChange={setFileList}
+                            form={form}
+                            onDeleteImage={handleDeleteImage}
+                        />
+                    )}
                 </AnimateWrapper>
             </div>
 
             <Divider>SẢN PHẨM</Divider>
             <AnimateWrapper variant="slideLeft" delay={0.2}>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {products.map(product => (
-                        <ProductCard
-                            key={product._id}
-                            {...product}
-                            isEditing={isEditing}
-                            onUpdate={handleUpdateProduct}
-                            onFormChange={handleProductFormChange}
-                            onImageUpload={handleProductImageUpload}
-                        />
-                    ))}
+                    {loading ? (
+                        <>
+                            <ProductCardSkeleton />
+                            <ProductCardSkeleton />
+                            <ProductCardSkeleton />
+                        </>
+                    ) : (
+                        products.map(product => (
+                            <ProductCard
+                                key={product._id}
+                                {...product}
+                                isEditing={isEditing}
+                                onUpdate={handleUpdateProduct}
+                                onFormChange={handleProductFormChange}
+                                onImageUpload={handleProductImageUpload}
+                            />
+                        ))
+                    )}
                 </div>
             </AnimateWrapper>
             <div className="mt-4 flex gap-4 mb-4">

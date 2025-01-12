@@ -94,9 +94,15 @@ class OrderService {
         const totalQuantity = orderItems.reduce((sum, item) => sum + item.quantity, 0);
         
         // Xác định giá mỗi ảnh dựa vào số lượng
-        const pricePerImage = totalQuantity >= priceConfig.bulkDiscountThreshold 
-            ? priceConfig.bulkPerImagePrice 
-            : priceConfig.normalPerImagePrice;
+        let pricePerImage;
+        
+        if (totalQuantity >= (priceConfig?.superBulkThreshold || 0)) {
+        pricePerImage = priceConfig?.superBulkPerImagePrice || 0;
+         } else if (totalQuantity >= (priceConfig?.bulkDiscountThreshold || 0)) {
+        pricePerImage = priceConfig?.bulkPerImagePrice || 0;
+         } else {
+        pricePerImage = priceConfig?.normalPerImagePrice || 0;
+        }
         
         // Tính tổng tiền
         const totalAmount = totalQuantity * pricePerImage;

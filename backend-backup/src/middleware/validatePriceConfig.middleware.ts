@@ -4,7 +4,9 @@ import Joi from "joi";
 const priceConfigSchema = Joi.object({
     normalPerImagePrice: Joi.number().required(),
     bulkPerImagePrice: Joi.number().required(),
+    superBulkPerImagePrice: Joi.number().required(),
     // shippingFee: Joi.number().required(),
+    superBulkThreshold: Joi.number().required(),
     bulkDiscountThreshold: Joi.number().required(),
 }).unknown(false);
 

@@ -1,52 +1,67 @@
 import { useEffect, useState } from 'react';
 import { ProductCard } from '../components/card/ProductCard';
-import { ReviewSection } from '../components/sections/home/ReviewSection';
 import { HeroSection } from '../components/sections/home/HeroSection';
-import GallerySection from '../components/sections/home/GallerySection';
-import { AnonymousReviewSection } from '../components/sections/home/AnonymousReviewSection';
 import { Divider } from 'antd';
 import { AnimateWrapper } from '../utils/animate/AnimateWrapper';
-import { getProducts } from '../services/productServices';
-import { IProductCardProps } from '../types/productCardProps';
 import { ProductCardSkeleton } from '../components/skeleton/ProductCardSkeleton';
+import { getAllProductCards } from '../services/productCardService';
+import { IProductCard } from '../types/productCard';
+import { getHeroSection } from '../services/heroSectionService';
+import { IHeroSection } from '../types/heroSection';
+import { HeroSectionSkeleton } from '../components/skeleton/HeroSectionSkeleton';
+
+
 
 export default function Home() {
-    const [products, setProducts] = useState<IProductCardProps[]>([]);
+    const [products, setProducts] = useState<IProductCard[]>([]);
+    const [heroSection, setHeroSection] = useState<IHeroSection>();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchData = async () => {
             try {
-                const data = await getProducts();
-                if (data && data.length > 0) {
-                    setProducts(data);
-                    setLoading(false);
-                } else {
-                    console.log('Lỗi không thể tải thông tin sản phẩm');
+                const [productsResponse, heroResponse] = await Promise.all([
+                    getAllProductCards(),
+                    getHeroSection()
+                ]);
+
+                if (productsResponse.metadata?.length > 0) {
+                    setProducts(productsResponse.metadata);
                 }
+
+                if (heroResponse.metadata) {
+                    setHeroSection(heroResponse.metadata);
+                }
+                setLoading(false);
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Error fetching data:', error);
             }
         };
-        fetchProducts();
+
+        fetchData();
     }, []);
 
     return (
         <div className="container mx-auto px-4 py-8">
             {/* Hero Section */}
             <AnimateWrapper variant="slideRight" delay={0.2}>
-                <HeroSection />
+                {loading || !heroSection ? (
+                    <HeroSectionSkeleton />
+                ) : (
+                    <HeroSection heroSection={heroSection} />
+                )}
             </AnimateWrapper>
 
             <Divider>SẢN PHẨM</Divider>
 
             {/* Products Section */}
             <AnimateWrapper variant="slideLeft" delay={0.2}>
-                <div className="container mx-auto px-4">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
+                <div className="w-full">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-stretch">
                             {loading ? (
                                 <>
+                                    <ProductCardSkeleton />
                                     <ProductCardSkeleton />
                                     <ProductCardSkeleton />
                                 </>
@@ -61,20 +76,6 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-            </AnimateWrapper>
-
-            {/* Gallery Section */}
-            <AnimateWrapper variant="slideRight" delay={0.2}>
-                <GallerySection />
-            </AnimateWrapper>
-
-            {/* Reviews Section */}
-            <AnimateWrapper variant="slideLeft" delay={0.2}>
-                <ReviewSection />
-            </AnimateWrapper>
-            {/* Anonymous Reviews Section */}
-            <AnimateWrapper variant="slideRight" delay={0.2}>
-                <AnonymousReviewSection />
             </AnimateWrapper>
         </div>
     );

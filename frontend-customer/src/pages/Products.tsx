@@ -1,20 +1,20 @@
 import { ProductCard } from '../components/card/ProductCard';
-import { getProducts } from '../services/productServices';
 import { AnimateWrapper } from '../utils/animate/AnimateWrapper';
-import { IProductCardProps } from '../types/productCardProps';
+import { IProductCard } from '../types/productCard';
 import { useEffect, useState } from 'react';
 import { ProductCardSkeleton } from '../components/skeleton/ProductCardSkeleton';
+import { getAllProductCards } from '../services/productCardService';
 
 export default function Products() {
-    const [products, setProducts] = useState<IProductCardProps[]>([]);
+    const [products, setProducts] = useState<IProductCard[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const data = await getProducts();
-                if (data && data.length > 0) {
-                    setProducts(data);
+                const response = await getAllProductCards();
+                if (response.metadata && response.metadata.length > 0) {
+                    setProducts(response.metadata);
                     setLoading(false);
                 } else {
                     console.log('Lỗi không thể tải thông tin sản phẩm');
@@ -30,14 +30,16 @@ export default function Products() {
         <div className="container mx-auto mt-0">
             <AnimateWrapper variant="slideLeft" delay={0.2}>
                 <h2 className="text-2xl font-bold text-center mb-8">Sản phẩm</h2>
-                <div className="container mx-auto px-4">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center">
+                <div className="w-full">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-stretch">
                             {(!products.length || loading) ? (
                                 <>
                                     <ProductCardSkeleton />
                                     <ProductCardSkeleton />
+                                    <ProductCardSkeleton />
                                 </>
+
                             ) : (
                                 products.map((product, index) => (
                                     <ProductCard

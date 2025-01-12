@@ -11,11 +11,19 @@ const priceConfigSchema = new Schema<IPriceConfig>({
         type: Number,
         required: true
     },
+    superBulkPerImagePrice: {
+        type: Number,
+        required: true
+    },
     // shippingFee: {
     //     type: Number,
     //     required: true
     // },
     bulkDiscountThreshold: {
+        type: Number,
+        required: true
+    },
+    superBulkThreshold: {
         type: Number,
         required: true
     },

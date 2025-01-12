@@ -92,10 +92,17 @@ export const UploadStep: React.FC<UploadStepProps> = ({ fileList,
         const totalQuantity = fileList.reduce((sum, file) => {
             return sum + getQuantity(file.uid);
         }, 0);
-        const pricePerImage =
-            totalQuantity >= (priceConfig?.bulkDiscountThreshold || 0) ?
-                (priceConfig?.bulkPerImagePrice || 0) :
-                (priceConfig?.normalPerImagePrice || 0);
+
+        let pricePerImage;
+
+        if (totalQuantity >= (priceConfig?.superBulkThreshold || 0)) {
+            pricePerImage = priceConfig?.superBulkPerImagePrice || 0;
+        } else if (totalQuantity >= (priceConfig?.bulkDiscountThreshold || 0)) {
+            pricePerImage = priceConfig?.bulkPerImagePrice || 0;
+        } else {
+            pricePerImage = priceConfig?.normalPerImagePrice || 0;
+        }
+
         return totalQuantity * pricePerImage;
     };
 
@@ -174,11 +181,14 @@ export const UploadStep: React.FC<UploadStepProps> = ({ fileList,
                     </p>
 
                     <p className="text-center font-medium">
-                        <span className="text-gray">Giá ảnh: </span>
+                        <span className="text-gray italic">Giá ảnh lẻ: </span>
                         <span className="text-red">{formatPrice(priceConfig?.normalPerImagePrice || 0)}/ảnh</span>
                         <span className="mx-2 text-gray-400">|</span>
-                        <span className="text-gray">Từ {priceConfig?.bulkDiscountThreshold || 0} ảnh: </span>
+                        <span className="text-gray italic">Từ {priceConfig?.bulkDiscountThreshold || 0} ảnh: </span>
                         <span className="text-green">{formatPrice(priceConfig?.bulkPerImagePrice || 0)}/ảnh</span>
+                        <span className="mx-2 text-gray">|</span>
+                        <span className="text-gray italic">Từ {priceConfig?.superBulkThreshold || 0} ảnh: </span>
+                        <span className="text-orange">{formatPrice(priceConfig?.superBulkPerImagePrice || 0)}/ảnh</span>
                     </p>
 
                     <p className="ant-upload-text">Bấm để tải ảnh lên</p>
@@ -244,7 +254,16 @@ export const UploadStep: React.FC<UploadStepProps> = ({ fileList,
                     <div className="flex justify-between items-center mb-4">
                         <span>Giá mỗi ảnh:</span>
                         <span className="font-semibold">
-                            {fileList.reduce((sum, file) => sum + getQuantity(file.uid), 0) >= (priceConfig?.bulkDiscountThreshold || 0) ? formatPrice(priceConfig?.bulkPerImagePrice || 0) : formatPrice(priceConfig?.normalPerImagePrice || 0)}
+                            {(() => {
+                                const totalQuantity = fileList.reduce((sum, file) => sum + getQuantity(file.uid), 0);
+                                if (totalQuantity >= (priceConfig?.superBulkThreshold || 0)) {
+                                    return formatPrice(priceConfig?.superBulkPerImagePrice || 0);
+                                } else if (totalQuantity >= (priceConfig?.bulkDiscountThreshold || 0)) {
+                                    return formatPrice(priceConfig?.bulkPerImagePrice || 0);
+                                } else {
+                                    return formatPrice(priceConfig?.normalPerImagePrice || 0);
+                                }
+                            })()}
                         </span>
                     </div>
                     <div className="flex justify-between items-center text-2xl font-bold">

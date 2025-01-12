@@ -25,7 +25,7 @@ export const ProductCard: React.FC<IProductCardProps> = ({
                     className="rounded-lg w-full h-[180px] object-cover mb-3"
                 />
                 <h3 className="text-xl font-semibold mb-2">{title}</h3>
-                <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+                <p className="text-sm text-gray-600 mb-3 break-words overflow-wrap-anywhere whitespace-pre-wrap">
                     {description}
                 </p>
             </div>

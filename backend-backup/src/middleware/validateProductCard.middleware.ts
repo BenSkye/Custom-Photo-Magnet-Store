@@ -5,7 +5,7 @@ const productCardSchema = Joi.object({
     title: Joi.string()
         .required()
         .min(3)
-        .max(100)
+        .max(10000)
         .messages({
             'string.empty': 'Tiêu đề không được để trống',
             'string.min': 'Tiêu đề phải có ít nhất {#limit} ký tự',
@@ -16,7 +16,7 @@ const productCardSchema = Joi.object({
     description: Joi.string()
         .required()
         .min(10)
-        .max(1000)
+        .max(10000)
         .messages({
             'string.empty': 'Mô tả không được để trống',
             'string.min': 'Mô tả phải có ít nhất {#limit} ký tự',

@@ -2,7 +2,7 @@ import { useEffect, useMemo, memo, useState } from 'react';
 import { Card, Form, Input, InputNumber } from 'antd';
 import { IProductCard } from '../../types/productCard';
 import { Upload } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { DollarOutlined, PlusOutlined } from '@ant-design/icons';
 import { formatPrice } from '../../utils/format/formatPrice';
 
 interface ProductCardProps extends IProductCard {
@@ -12,30 +12,31 @@ interface ProductCardProps extends IProductCard {
     onImageUpload?: (file: File) => Promise<string>;
 }
 
+//View Mode
 const ViewMode = memo(({ imageUrl, title, description, price }: IProductCard) => (
-    <Card className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-[680px] flex flex-col justify-between">
+    <Card className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 w-full max-w-[680px] flex flex-col justify-between ">
         <div>
             <img
                 src={imageUrl}
                 className="rounded-lg w-full h-[180px] object-cover mb-3"
             />
             <h3 className="text-xl font-semibold mb-2">{title}</h3>
-            <p className="text-sm text-gray-600 mb-3 line-clamp-3">
+            <p className="text-sm text-gray-600 mb-3 break-words overflow-wrap-anywhere whitespace-pre-wrap">
                 {description}
             </p>
         </div>
         <div>
             <div className="mb-4 flex items-center">
+                <DollarOutlined className="text-red mr-2 text-xl" />
                 <span className="text-sm text-gray-600">Giá: </span>
-                <span className="text-2xl font-bold text-red ml-1">
-                    {formatPrice(price)}
-                </span>
+                <span className="text-2xl font-bold text-red ml-1">{formatPrice(price)}</span>
+                <span className="text-sm text-gray-600">/cái</span>
             </div>
         </div>
     </Card>
 ));
 
-// Tách EditMode thành component riêng
+//Edit Mode
 const EditMode = memo(({
     form,
     imageUrl,
@@ -56,30 +57,17 @@ const EditMode = memo(({
 
     const handleImageChange = async (info: any) => {
         if (!onImageUpload) return;
-
         const file = info.file;
-
         // Kiểm tra file có tồn tại không
         if (!file) return;
-
         setImageLoading(true);
-
         try {
-
-
             // Upload file và lấy URL mới
             const newImageUrl = await onImageUpload(file);
-
-            console.log('====================================');
-            console.log('newImageUrl', newImageUrl);
-            console.log('====================================');
-
             // Cập nhật preview
             setPreviewImage(newImageUrl);
-
             // Cập nhật giá trị trong form
             form.setFieldsValue({ imageUrl: newImageUrl });
-
             // Trigger form change để cập nhật state ở component cha
             handleValuesChange(
                 { imageUrl: newImageUrl },

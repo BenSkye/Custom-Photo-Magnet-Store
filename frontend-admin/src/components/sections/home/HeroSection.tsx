@@ -60,7 +60,7 @@ export const HeroSection = ({
                         key={index}
                         src={img.imageUrl}
                         alt={img.altText}
-                        className="rounded-lg w-full h-40 object-cover"
+                        className="rounded-lg w-full"
                     />
                 ))}
             </div>

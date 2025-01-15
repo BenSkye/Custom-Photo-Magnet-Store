@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Card, Form, InputNumber, Button, message, Modal } from 'antd';
+import { CarOutlined, DollarOutlined, NumberOutlined, PictureOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { IPriceConfig } from '../types/priceConfig';
 import { getCurrentPriceConfig, updatePriceConfig } from '../services/priceConfigService';
 import { STATUS_CODE } from '../utils/constants';
 import { formatPrice } from '../utils/format/formatPrice';
+
 
 export default function ManagePrice() {
     const [form] = Form.useForm();
@@ -19,7 +21,7 @@ export default function ManagePrice() {
         superBulkPerImagePrice: 0,
         bulkDiscountThreshold: 0,
         superBulkThreshold: 0,
-
+        shippingFee: 0,
     });
 
     useEffect(() => {
@@ -80,7 +82,15 @@ export default function ManagePrice() {
 
     return (
         <div className="p-6">
-            <Card title="Quản lý giá" className="max-w-2xl mx-auto">
+            <Card
+                title={
+                    <span className="text-xl flex items-center gap-2">
+                        <DollarOutlined className="text-blue-500" />
+                        Quản lý giá
+                    </span>
+                }
+                className="max-w-3xl mx-auto shadow-md"
+            >
                 <Form
                     form={form}
                     layout="vertical"
@@ -88,7 +98,35 @@ export default function ManagePrice() {
                     onFinish={showConfirmModal}
                 >
                     <Form.Item
-                        label="Giá in ảnh thường (VNĐ/ảnh)"
+                        label={
+                            <span className="flex items-center gap-2">
+                                <CarOutlined className="text-lg" />
+                                <span>Phí vận chuyển (VNĐ)</span>
+                            </span>
+                        }
+                        name="shippingFee"
+                        rules={[{ required: true, message: 'Vui lòng nhập phí vận chuyển' }]}
+                    >
+                        <InputNumber
+                            addonAfter="đ"
+                            className="w-full"
+                            min={0}
+                            step={1000}
+                            formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            onKeyPress={(event) => {
+                                if (!/[0-9]/.test(event.key)) {
+                                    event.preventDefault();
+                                }
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        label={
+                            <span className="flex items-center gap-2 text-gray-700">
+                                <PictureOutlined className="text-lg text-blue-500" />
+                                <span>Giá in ảnh thường (VNĐ/ảnh)</span>
+                            </span>
+                        }
                         name="normalPerImagePrice"
                         rules={[
                             { required: true, message: 'Vui lòng nhập giá in ảnh thường' },
@@ -123,7 +161,12 @@ export default function ManagePrice() {
                     </Form.Item>
 
                     <Form.Item
-                        label="Giá in ảnh sỉ cấp 1 (VNĐ/ảnh)"
+                        label={
+                            <span className="flex items-center gap-2 text-gray-700">
+                                <TeamOutlined className="text-lg text-blue-500" />
+                                <span>Giá in ảnh sỉ cấp 1 (VNĐ/ảnh)</span>
+                            </span>
+                        }
                         name="bulkPerImagePrice"
                         rules={[
                             { required: true, message: 'Vui lòng nhập giá in ảnh sỉ cấp 1' },
@@ -158,7 +201,12 @@ export default function ManagePrice() {
                     </Form.Item>
 
                     <Form.Item
-                        label="Số lượng ảnh để được giá sỉ cấp 1"
+                        label={
+                            <span className="flex items-center gap-2 text-gray-700">
+                                <NumberOutlined className="text-lg text-blue-500" />
+                                <span>Số lượng ảnh để được giá sỉ cấp 1</span>
+                            </span>
+                        }
                         name="bulkDiscountThreshold"
                         rules={[
                             { required: true, message: 'Vui lòng nhập số lượng ảnh tối thiểu để được giá sỉ cấp 1' },
@@ -184,7 +232,12 @@ export default function ManagePrice() {
                     </Form.Item>
 
                     <Form.Item
-                        label="Giá in ảnh sỉ cấp 2 (VNĐ/ảnh)"
+                        label={
+                            <span className="flex items-center gap-2 text-gray-700">
+                                <UserOutlined className="text-lg text-blue-500" />
+                                <span>Giá in ảnh sỉ cấp 2 (VNĐ/ảnh)</span>
+                            </span>
+                        }
                         name="superBulkPerImagePrice"
                         rules={[
                             { required: true, message: 'Vui lòng nhập giá in ảnh sỉ cấp 2' },
@@ -219,7 +272,12 @@ export default function ManagePrice() {
                     </Form.Item>
 
                     <Form.Item
-                        label="Số lượng ảnh để được giá sỉ cấp 2"
+                        label={
+                            <span className="flex items-center gap-2 text-gray-700">
+                                <NumberOutlined className="text-lg text-blue-500" />
+                                <span>Số lượng ảnh để được giá sỉ cấp 2</span>
+                            </span>
+                        }
                         name="superBulkThreshold"
                         rules={[
                             { required: true, message: 'Vui lòng nhập số lượng ảnh tối thiểu để được giá sỉ cấp 2' },
@@ -249,7 +307,8 @@ export default function ManagePrice() {
                             type="primary"
                             htmlType="submit"
                             loading={loading}
-                            className="w-full bg-blue-500"
+                            className="w-full"
+                            icon={<DollarOutlined />}
                         >
                             Cập nhật giá
                         </Button>
@@ -268,6 +327,7 @@ export default function ManagePrice() {
                 <p>Bạn có chắc chắn muốn thay đổi giá với các thông tin sau:</p>
                 {newPriceValues && (
                     <div className="mt-4">
+                        <p>Phí vận chuyển: <strong>{formatPrice(newPriceValues.shippingFee)}</strong></p>
                         <p>Giá in ảnh thường: <strong>{formatPrice(newPriceValues.normalPerImagePrice)}</strong></p>
                         <p>Giá in ảnh số cấp 1: <strong>{formatPrice(newPriceValues.bulkPerImagePrice)}</strong></p>
                         <p>Số lượng ảnh để được giá sỉ cấp 1: <strong>{newPriceValues.bulkDiscountThreshold} ảnh</strong></p>

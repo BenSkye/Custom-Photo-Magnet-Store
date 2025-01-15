@@ -37,7 +37,7 @@ class PriceConfigService {
         return await priceConfigRepo.getCurrentPriceConfig();
     }
 
-    ///////////////////////////////////////
+    /////////////////////////////////////// Validate
 
     private static validatePriceConfigData(data: IPriceConfigCreate) {
         if (data.normalPerImagePrice < this.PRICE_CONFIG_MIN) {
@@ -46,9 +46,9 @@ class PriceConfigService {
         if (data.superBulkPerImagePrice < this.PRICE_CONFIG_MIN) {
             throw new BadRequestError(`Price ${data.superBulkPerImagePrice} must be greater than ${this.PRICE_CONFIG_MIN}`);
         }
-        // if (data.shippingFee < this.PRICE_CONFIG_MIN) {
-        //     throw new BadRequestError(`Price ${data.shippingFee} must be greater than ${this.PRICE_CONFIG_MIN}`);
-        // }
+        if (data.shippingFee < this.PRICE_CONFIG_MIN) {
+            throw new BadRequestError(`Price ${data.shippingFee} must be greater than ${this.PRICE_CONFIG_MIN}`);
+        }
     }
 }
 

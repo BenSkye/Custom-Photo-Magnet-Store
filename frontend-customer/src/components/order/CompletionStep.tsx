@@ -3,7 +3,7 @@ import { Button, message } from 'antd';
 import { OrderInfo } from '../../types/orderInfor';
 import { formatPrice } from '../../utils/format/formatPrice';
 import { ConfirmOrderModal } from '../modal/ConfirmOrderModal';
-import { FIREBASE_STORAGE_PATH, PRICE, STATUS_CODE } from '../../utils/constants';
+import { FIREBASE_STORAGE_PATH, STATUS_CODE } from '../../utils/constants';
 import { uploadImages } from '../../services/uploadService';
 import { IndexedDBService } from '../../services/indexedDBService';
 import { createOrder } from '../../services/orderService';
@@ -15,6 +15,7 @@ interface CompletionStepProps {
     orderInfo?: OrderInfo;
     totalImages: number;
     totalPrice: number;
+    shippingFee: number;
     onPrev: () => void;
     onConfirm: (isSuccess: boolean) => void;
 }
@@ -28,6 +29,7 @@ export const CompletionStep: React.FC<CompletionStepProps> = ({
     orderInfo,
     totalImages,
     totalPrice,
+    shippingFee,
     onPrev,
     onConfirm,
 }) => {
@@ -145,7 +147,7 @@ export const CompletionStep: React.FC<CompletionStepProps> = ({
                     </div>
                     <div className="flex justify-between">
                         <span className="text-gray">Phí vận chuyển:</span>
-                        <span className="font-medium">{formatPrice(PRICE.SHIPPING_FEE)}</span>
+                        <span className="font-medium">{formatPrice(shippingFee)}</span>
                     </div>
                     <div className="border-t pt-2 flex justify-between">
                         <span className="font-bold">Tổng tiền:</span>

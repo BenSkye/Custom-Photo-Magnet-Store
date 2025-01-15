@@ -3,7 +3,7 @@ export interface IPriceConfig{
     normalPerImagePrice: number;
     bulkPerImagePrice: number;
     superBulkPerImagePrice: number;
-    // shippingFee: number;
+    shippingFee: number;
     bulkDiscountThreshold: number;
     superBulkThreshold: number;
     isActive: boolean;
@@ -13,7 +13,7 @@ export interface IPriceConfigCreate {
     normalPerImagePrice: number;
     bulkPerImagePrice: number;
     superBulkPerImagePrice: number;
-    // shippingFee: number;
+    shippingFee: number;
     bulkDiscountThreshold: number;
     superBulkThreshold: number;
 }

@@ -15,10 +15,10 @@ const priceConfigSchema = new Schema<IPriceConfig>({
         type: Number,
         required: true
     },
-    // shippingFee: {
-    //     type: Number,
-    //     required: true
-    // },
+    shippingFee: {
+        type: Number,
+        required: true
+    },
     bulkDiscountThreshold: {
         type: Number,
         required: true

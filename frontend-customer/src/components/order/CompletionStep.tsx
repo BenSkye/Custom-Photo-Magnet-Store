@@ -3,7 +3,7 @@ import { Button, message } from 'antd';
 import { OrderInfo } from '../../types/orderInfor';
 import { formatPrice } from '../../utils/format/formatPrice';
 import { ConfirmOrderModal } from '../modal/ConfirmOrderModal';
-import { FIREBASE_STORAGE_PATH, STATUS_CODE } from '../../utils/constants';
+import { FIREBASE_STORAGE_PATH, PRICE, STATUS_CODE } from '../../utils/constants';
 import { uploadImages } from '../../services/uploadService';
 import { IndexedDBService } from '../../services/indexedDBService';
 import { createOrder } from '../../services/orderService';
@@ -112,20 +112,20 @@ export const CompletionStep: React.FC<CompletionStepProps> = ({
                 {/* Thông tin khách hàng */}
                 <div className="space-y-3 mb-4 sm:mb-6">
                     <div className="flex flex-col sm:flex-row">
-                        <span className="text-gray-600 sm:w-40 mb-1 sm:mb-0">Họ tên: </span>
+                        <span className="text-gray sm:w-40 mb-1 sm:mb-0">Họ tên: </span>
                         <span className="font-medium break-words max-w-[calc(100%-10rem)] overflow-hidden">{orderInfo?.fullName}</span>
                     </div>
                     <div className="flex flex-col sm:flex-row">
-                        <span className="text-gray-600 sm:w-40 mb-1 sm:mb-0">Số điện thoại:</span>
+                        <span className="text-gray sm:w-40 mb-1 sm:mb-0">Số điện thoại:</span>
                         <span className="font-medium break-words max-w-[calc(100%-10rem)] overflow-hidden">{orderInfo?.phone}</span>
                     </div>
                     <div className="flex flex-col sm:flex-row">
-                        <span className="text-gray-600 sm:w-40 mb-1 sm:mb-0">Địa chỉ nhận hàng:</span>
+                        <span className="text-gray sm:w-40 mb-1 sm:mb-0">Địa chỉ nhận hàng:</span>
                         <span className="font-medium break-words max-w-[calc(100%-10rem)] overflow-hidden">{orderInfo?.address}</span>
                     </div>
                     {orderInfo?.note && (
                         <div className="flex flex-col sm:flex-row">
-                            <span className="text-gray-600 sm:w-40 mb-1 sm:mb-0">Ghi chú:</span>
+                            <span className="text-gray sm:w-40 mb-1 sm:mb-0">Ghi chú:</span>
                             <span className="font-medium break-words max-w-[calc(100%-10rem)] overflow-hidden">
                                 {orderInfo.note}
                             </span>
@@ -136,12 +136,16 @@ export const CompletionStep: React.FC<CompletionStepProps> = ({
                 {/* Thông tin đơn hàng */}
                 <div className="bg-gray-50 p-3 sm:p-4 rounded-lg space-y-3 mb-4 sm:mb-6">
                     <div className="flex justify-between">
-                        <span className="text-gray-600">Số lượng ảnh:</span>
+                        <span className="text-gray">Số lượng ảnh:</span>
                         <span className="font-medium">x{totalImages}</span>
                     </div>
                     <div className="flex justify-between">
-                        <span className="text-gray-600">Tiền ảnh:</span>
+                        <span className="text-gray">Tiền ảnh:</span>
                         <span className="font-medium">{formatPrice(totalPrice)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <span className="text-gray">Phí vận chuyển:</span>
+                        <span className="font-medium">{formatPrice(PRICE.SHIPPING_FEE)}</span>
                     </div>
                     <div className="border-t pt-2 flex justify-between">
                         <span className="font-bold">Tổng tiền:</span>
@@ -149,7 +153,7 @@ export const CompletionStep: React.FC<CompletionStepProps> = ({
                     </div>
                 </div>
 
-                <p className="text-red-500 text-xs sm:text-sm text-center mb-4 sm:mb-6">
+                <p className="text-red text-xs sm:text-sm text-center mb-4 sm:mb-6">
                     Hãy bấm HOÀN TẤT nếu tất cả thông tin trên đã chính xác bạn nhé
                 </p>
 
@@ -166,7 +170,7 @@ export const CompletionStep: React.FC<CompletionStepProps> = ({
                         type="primary"
                         size="large"
                         onClick={handleConfirmClick}
-                        className="min-w-[120px] bg-blue-500"
+                        className="min-w-[120px] bg-blue"
                         loading={isUploading}
                     >
                         HOÀN TẤT

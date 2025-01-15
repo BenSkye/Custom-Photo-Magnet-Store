@@ -1,6 +1,6 @@
 export interface IPricing {
     totalQuantity: number;
     pricePerImage: number;
-    // shippingFee: number;
+    shippingFee: number;
     totalAmount: number;
 }

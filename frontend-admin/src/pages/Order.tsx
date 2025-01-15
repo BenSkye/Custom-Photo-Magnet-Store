@@ -84,6 +84,7 @@ export default function Orders() {
             render: (pricing: Pricing) => (
                 <div className='flex flex-col'>
                     <div> {pricing.totalQuantity} × {formatPrice(pricing.pricePerImage)}</div>
+                    <div>Ship: {formatPrice(pricing.shippingFee)}</div>
                     <div>Tổng: <span className='font-bold text-red'>{formatPrice(pricing.totalAmount)}</span></div>
                 </div>
             ),

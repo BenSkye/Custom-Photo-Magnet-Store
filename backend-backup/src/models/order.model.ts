@@ -61,10 +61,10 @@ const pricingSchema = new Schema<IPricing>({
         type: Number,
         required: true
     },
-    // shippingFee: {
-    //     type: Number,
-    //     required: true
-    // },
+    shippingFee: {
+        type: Number,
+        required: true
+    },
     totalAmount: {
         type: Number,
         required: true

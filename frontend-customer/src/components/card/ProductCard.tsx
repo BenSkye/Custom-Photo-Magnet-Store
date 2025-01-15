@@ -16,7 +16,7 @@ export const ProductCard: React.FC<IProductCard> = ({
     imageUrl,
 }) => {
     return (
-        <Card className="group bg-white p-6 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-[1.02] w-full max-w-[680px]">
+        <Card className="group bg-white rounded-lg shadow-lg transform transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-[1.02] w-full max-w-[680px]">
             <div className="flex flex-col h-full">
                 <div>
                     <img
@@ -25,16 +25,16 @@ export const ProductCard: React.FC<IProductCard> = ({
                         className="rounded-lg w-full h-[180px] object-cover mb-3 transform transition-all duration-300 ease-in-out group-hover:scale-[1.02]"
                     />
                     <h3 className="text-xl font-semibold mb-2">{title}</h3>
-                    <p className="text-sm text-gray-600 mb-3 break-words overflow-wrap-anywhere whitespace-pre-wrap">
+                    <p className="text-sm text-gray mb-3 break-words overflow-wrap-anywhere whitespace-pre-wrap">
                         {description}
                     </p>
                 </div>
                 <div className="mt-auto">
                     <div className="mb-4 flex items-center">
                         <DollarOutlined className="text-red mr-2 text-xl" />
-                        <span className="text-sm text-gray-600">Giá: </span>
+                        <span className="text-sm text-gray">Giá: </span>
                         <span className="text-2xl font-bold text-red ml-1">{formatPrice(price)}</span>
-                        <span className="text-sm text-gray-600">/cái</span>
+                        <span className="text-sm text-gray">/cái</span>
                     </div>
                     <div className="flex lg:flex-row gap-2 flex-col">
                         <Link to="/information" className="w-full">

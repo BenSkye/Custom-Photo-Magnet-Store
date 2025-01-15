@@ -190,6 +190,9 @@ export default function OrderDetail() {
                     <Descriptions.Item label="Đơn giá">
                         {formatPrice(order.pricing.pricePerImage)}
                     </Descriptions.Item>
+                    <Descriptions.Item label="Phí vận chuyển">
+                        {formatPrice(order.pricing.shippingFee)}
+                    </Descriptions.Item>
                     <Descriptions.Item label="Tổng tiền" >
                         <span className="font-bold text-red">
                             {formatPrice(order.pricing.totalAmount)}

@@ -16,14 +16,14 @@ const orderSchema = Joi.object({
         Joi.object({
             imageUrl: Joi.string().required(),
             quantity: Joi.number().integer().min(1).required()
-        }).unknown(false)  // Không cho phép bất kỳ field nào khác
+        }).unknown(false)  
     ).min(1).required()
 }).unknown(false);
 
 export const validateOrder = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const validatedData = await orderSchema.validateAsync(req.body, { 
-            stripUnknown: true,  // stripUnknown: true sẽ loại bỏ các field không được định nghĩa trong schema
+            stripUnknown: true,  
             abortEarly: false
         });
         req.body = validatedData;

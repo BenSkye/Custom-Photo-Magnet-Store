@@ -3,9 +3,12 @@ import { IOrderRequest } from '../interface/order.interface';
 import priceConfigRepo from '../repositories/priceConfig.repo';
 import { BadRequestError } from '../core/error.response';
 import statusRepo from '../repositories/status.repo';
+import { PRICE } from '../utils/constants';
 
 
 class OrderService {
+
+    private static readonly SHIPPING_FEE = PRICE.PRICE_SHIPPING;
 
     static getOrderById = async (id: string) => {
         return await orderRepo.getOrderById(id);
@@ -36,6 +39,7 @@ class OrderService {
                 customer,
                 orderItems,
                 pricing,
+                shippingFee: this.SHIPPING_FEE,
             });
 
             return newOrder;
@@ -105,12 +109,13 @@ class OrderService {
         }
         
         // Tính tổng tiền
-        const totalAmount = totalQuantity * pricePerImage;
+        const totalAmount = totalQuantity * pricePerImage + this.SHIPPING_FEE;
 
         return {
             totalQuantity,
             pricePerImage,
-            totalAmount
+            totalAmount,
+            shippingFee: this.SHIPPING_FEE,
         };
     }
 

@@ -36,6 +36,7 @@ export interface Pricing {
     totalAmount: number;
     totalQuantity: number;
     pricePerImage: number;
+    shippingFee: number;
 }
 export interface Order {
     code: string;

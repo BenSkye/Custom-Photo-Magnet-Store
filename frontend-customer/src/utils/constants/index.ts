@@ -38,5 +38,9 @@ export enum SORT_ORDER {
     DESC = 'desc',
 }
 
+export enum PRICE {
+    SHIPPING_FEE = 25000,
+}
+
 export const GOOGLE_MAP_URL = import.meta.env.VITE_GOOGLE_MAP_URL;
 

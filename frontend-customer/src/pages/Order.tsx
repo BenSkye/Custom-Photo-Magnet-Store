@@ -11,7 +11,6 @@ import { FailureStep } from '../components/order/FailureStep';
 import { getCurrentPriceConfig } from '../services/priceConfigService';
 import { IPriceConfig } from '../types/priceConfig';
 import { UploadStepSkeleton } from '../components/skeleton/UploadStepSkeleton';
-import { PRICE } from '../utils/constants';
 
 
 export default function Order() {
@@ -78,7 +77,7 @@ export default function Order() {
             ? bulkPerImagePrice
             : normalPerImagePrice;
 
-        return totalQuantity * pricePerImage + PRICE.SHIPPING_FEE;
+        return totalQuantity * pricePerImage + priceConfig.shippingFee;
     };
 
     const handleConfirmOrder = async (success: boolean) => {
@@ -125,6 +124,7 @@ export default function Order() {
                     totalPrice={calculateTotalPrice()}
                     onPrev={prev}
                     onConfirm={handleConfirmOrder}
+                    shippingFee={priceConfig?.shippingFee || 0}
                 />
             )
         }

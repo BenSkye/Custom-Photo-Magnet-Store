@@ -9,6 +9,8 @@ import { IProductCard } from '../types/productCard';
 import { getHeroSection } from '../services/heroSectionService';
 import { IHeroSection } from '../types/heroSection';
 import { HeroSectionSkeleton } from '../components/skeleton/HeroSectionSkeleton';
+import GallerySection from '../components/sections/home/GallerySection';
+import { ReviewSection } from '../components/sections/home/ReviewSection';
 
 
 
@@ -77,6 +79,23 @@ export default function Home() {
                     </div>
                 </div>
             </AnimateWrapper>
+
+            {/*Gallery Section */}
+
+            <AnimateWrapper variant="slideRight" delay={0.2}>
+                <div className="container mx-auto px-4 py-4">
+                    <GallerySection />
+                </div>
+            </AnimateWrapper>
+
+            {/*Review Section */}
+            <AnimateWrapper variant="slideLeft" delay={0.2}>
+                <div className="container mx-auto px-4 py-4">
+                    <ReviewSection />
+                </div>
+            </AnimateWrapper>
+
+            {/*Anonymous Reviews Section */}
         </div>
     );
 }

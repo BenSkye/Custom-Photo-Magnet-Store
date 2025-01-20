@@ -128,36 +128,6 @@ class AccessService {
       if (!apiKey) {
         throw new BadRequestError('Create API Key Fail');
       }
-      // const verificationToken = crypto.randomBytes(32).toString('hex');
-      // const verificationTokenHash = crypto.createHash('sha256').update(verificationToken).digest('hex');
-      // const verificationTokenExpire = new Date(Date.now() + 10 * 60 * 1000); // Token expires in 10 minutes
-
-      // newUser.verificationToken = verificationTokenHash;
-      // newUser.verificationTokenExpire = verificationTokenExpire;
-      // await newUser.save();
-
-      // // Step 8: Send verification email
-      // const verificationUrl = `http://localhost:2709/verify-email?token=${verificationToken}`;
-      // const transporter = nodemailer.createTransport({
-      //   service: 'Gmail',
-      //   auth: {
-      //     user: 'khanhhgse173474@fpt.edu.vn',
-      //     pass: 'zkoawauogcjlccfg',
-      //   },
-      // });
-
-      // const mailOptions = {
-      //   from: 'khanhhgse173474@fpt.edu.vn',
-      //   to: email,
-      //   subject: 'Email Verification',
-      //   html: `
-      //     <p>Thank you for signing up! Please verify your email by clicking the link below:</p>
-      //     <a href="${verificationUrl}" target="_blank">Verify Email</a>
-      //     <p>This link will expire in 10 minutes.</p>
-      //   `,
-      // };
-
-      // await transporter.sendMail(mailOptions);
       return {
         user: getInfoData({ fields: ['_id', 'name', 'email', 'roles'], object: newUser }),
         tokens,
